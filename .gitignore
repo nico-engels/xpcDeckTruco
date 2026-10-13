@@ -1,0 +1,17 @@
+.vscode/
+Interface/SPA-Simple/.env
+Interface/SPA-Simple/dist
+Interface/SPA-Simple/node_modules
+Interface/SPA-Simple/rec/sslcert
+Interface/SPA-Simple/package-lock.json
+Service/Truco/.env
+Service/Truco/coverage/
+Service/Truco/dist/
+Service/Truco/node_modules
+Service/Truco/package-lock.json
+Service/Truco/rec/bd/db.sqlite3
+Service/Truco/rec/bd/selects.sql
+Service/Truco/rec/bd/selects1.sql
+Service/Truco/rec/log
+Service/Truco/rec/sslcert
+

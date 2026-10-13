@@ -1,0 +1,56 @@
+{
+  "tables": [
+    {
+      "name": "games",
+      "atributes": [
+        {
+          "name": "id",
+          "type": "N"
+        }
+      ],
+      "key": {
+        "name": "id",
+        "type": "hash"
+      }
+    },
+    {
+      "name": "pre-auth-games",
+      "atributes": [
+        {
+          "name": "id",
+          "type": "N"
+        }
+      ],
+      "key": {
+        "name": "id",
+        "type": "hash"
+      }
+    },
+    {
+      "name": "users",
+      "atributes": [
+        {
+          "name": "username",
+          "type": "S"
+        }
+      ],
+      "key": {
+        "name": "username",
+        "type": "hash"
+      }
+    },
+    {
+      "name": "util-key-maps",
+      "atributes": [
+        {
+          "name": "key-id",
+          "type": "S"
+        }
+      ],
+      "key": {
+        "name": "key-id",
+        "type": "hash"
+      }
+    }
+  ]
+}

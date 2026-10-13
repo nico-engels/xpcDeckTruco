@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@app/*": ["./src/*"],
+      "@root/*": ["./*"],
+      "@test/*": ["./tests/common/*"],
+      "@usecase/*": ["./src/usecase/*"]
+    },
+    "outDir": "dist",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["ESNext"],
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "target": "esnext"
+  },
+  "include": ["./src/**/*", "./tests/**/*"],
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
+}

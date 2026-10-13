@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="57" height="88" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <symbol id="desc" width="10" height="60">
+		<text style="font-size:5px; line-height:1; font-family:'Wide Latin';
+            letter-spacing:0px; word-spacing:0px; writing-mode:tb-rl;
+            text-orientation:upright; fill:#000000; fill-opacity:1; stroke-width:1"
+     transform="scale(0.86477781,1.1563664)">
+      <tspan x="8" y="4">joker</tspan>
+    </text>
+	</symbol>
+  <symbol id="XRP" width="60" height="600">
+		<text style="font-size:5px; font-family:'Elephant'; fill:#555; "
+     transform="scale(0.86477781,1.1563664)">
+      <tspan x="18" y="55">xrp: the std</tspan>
+    </text>
+	</symbol>
+
+  <symbol id="special" width="100" height="600">
+    <g transform="matrix(1.0048732,0,0,1.0150434,-59.798314,-79.227874)">
+      <rect
+         style="fill:#000000;fill-rule:evenodd;stroke-width:0.264583"
+
+         width="40.567669"
+         height="5.5827069"
+         x="89.593254"
+         y="131.59453" />
+      <path
+         style="fill:#000000;stroke-width:0.264583"
+
+         type="arc"
+         cx="112.72529"
+         cy="-131.73825"
+         rx="20.338467"
+         ry="15.543731"
+         start="0"
+         end="3.1631194"
+         arc-type="slice"
+         transform="matrix(0.9999563,0.00934866,0.02214844,-0.99975469,0,0)"
+         transform-center-x="10.41481"
+         transform-center-y="0.80543903"
+         d="m 133.06376,-131.73825 a 20.338467,15.543731 0 0 1 -10.29589,13.51669 20.338467,15.543731 0 0 1 -20.46354,-0.16834 20.338467,15.543731 0 0 1 -9.912796,-13.68293 l 20.333756,0.33458 z" />
+      <rect
+         style="fill:#000000;stroke-width:0.264583"
+
+         width="24.52566"
+         height="1.1645904"
+         x="89.462288"
+         y="132.90416" />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 116.1674,112.20611 2.43617,5.8468 -3.64561,-0.43195 z"
+          />
+      <rect
+         style="fill:#000000;stroke-width:1.22125;stroke-miterlimit:4;stroke-dasharray:none"
+
+         width="40.719639"
+         height="9.80019"
+         x="89.629921"
+         y="141.23888" />
+      <path
+         type="star"
+         style="fill:#000000;stroke-width:6.4252;stroke-miterlimit:4;stroke-dasharray:none"
+
+         flatsided="true"
+         sides="4"
+         cx="176.16505"
+         cy="524.79944"
+         r1="40.634808"
+         r2="28.733147"
+         arg1="1.3258177"
+         arg2="2.1112158"
+         rounded="0"
+         randomized="0"
+         transform="matrix(0.1114081,0.02320336,-0.02878837,0.09742571,59.665828,56.917526)"
+         d="m 186.02044,564.22099 -49.27694,-29.56616 29.56617,-49.27695 49.27694,29.56617 z"
+         transform-center-x="-1.6138323"
+         transform-center-y="-3.2276647" />
+      <path
+         type="star"
+         style="fill:#000000;stroke-width:6.4252;stroke-miterlimit:4;stroke-dasharray:none"
+
+         flatsided="true"
+         sides="4"
+         cx="176.16505"
+         cy="524.79944"
+         r1="40.634808"
+         r2="28.733147"
+         arg1="1.3258177"
+         arg2="2.1112158"
+         rounded="0"
+         randomized="0"
+         transform="matrix(0.1114081,0.02320336,-0.02878837,0.09742571,149.05221,56.748315)"
+         transform-center-x="-1.6138323"
+         transform-center-y="-3.2276647"
+         d="m 186.02044,564.22099 -49.27694,-29.56616 29.56617,-49.27695 49.27694,29.56617 z" />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 109.80256,132.75975 109.62869,85.500663 98.792958,119.85224 118.60357,118.05291 109.62869,86.192313"
+          />
+      <path
+         type="star"
+         style="fill:#000000;stroke-width:6.4252;stroke-miterlimit:4;stroke-dasharray:none"
+
+         flatsided="true"
+         sides="4"
+         cx="176.16505"
+         cy="524.79944"
+         r1="40.634808"
+         r2="28.733147"
+         arg1="1.3258177"
+         arg2="2.1112158"
+         rounded="0"
+         randomized="0"
+         transform="matrix(0.11183108,0.02107058,-0.02692171,0.09795796,104.01562,27.002813)"
+         d="m 186.02044,564.22099 -49.27694,-29.56616 29.56617,-49.27695 49.27694,29.56617 z" />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 116.1674,112.20611 32.7273,-0.19576 -32.0461,15.44668 z"
+          />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 101.58683,112.28441 -32.727312,-0.19576 32.046112,15.44668 z"
+          />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 134.83131,119.15733 -4.67038,12.4372 -11.55736,-13.54162 z"
+          />
+      <path
+         style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 84.802508,119.84897 4.79075,11.74556 11.312372,-4.0592 z"
+          />
+    </g>
+  </symbol>
+
+  <rect x="1.5" y="1.5" width="54" height="85" fill="#ffffff" />
+  <path d="M 2 0 h 53 l 2 2 v 84 l -2 2 h -53 l -2 -2 v -84 z m 0 2 v 84 h 53 v -84 z" style="fill: #000" />
+
+  <g style="fill: #888;">
+		<use xlink:href="#desc"/>
+    <use xlink:href="#desc" transform="rotate(180, 28.5, 44)"/>
+    <use xlink:href="#special" transform="translate(8, 25) scale(0.4)"/>
+		<use xlink:href="#XRP"/>
+	</g>
+
+</svg>

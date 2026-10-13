@@ -1,0 +1,528 @@
+body {
+  margin: 0;
+}
+
+#app {
+  margin: auto;
+  width: 720px;
+  height: 100dvh;
+  background-color: antiquewhite;
+}
+
+#header {
+  height: 15%;
+}
+
+#player_2_name_round {
+  width: 90%;
+  height: 20%;
+  margin: auto;
+}
+
+#player_2_name_p {
+  margin: 4px 0px 0px 0px;
+  float: left;
+  padding-right: 5px;
+  font-size: 15px;
+  font-family: 'Courier New', Courier, monospace;
+  padding-left: 5px;
+  background-color: #faa0a0;
+}
+
+#player_2_round_p {
+  margin: 2px 0px 0px 0px;
+  float: right;
+  font-size: 17px;
+  font-family: 'Courier New', Courier, monospace;
+  font-style: italic;
+}
+
+#header_area {
+  width: 90%;
+  height: 80%;
+  margin: auto;
+}
+
+#player_2_cards {
+  float: left;
+  height: 95px;
+  width: 30%;
+  padding: 1%;
+}
+
+#player_2_cards_1 {
+  height: 100%;
+  width: 31%;
+  float: left;
+  margin-right: 3%;
+}
+
+#player_2_cards_1_img {
+  height: 100%;
+  width: 100%;
+}
+
+#player_2_cards_2 {
+  height: 100%;
+  width: 31%;
+  float: left;
+  margin-right: 3%;
+}
+
+#player_2_cards_2_img {
+  height: 100%;
+  width: 100%;
+}
+
+#player_2_cards_3 {
+  height: 100%;
+  width: 31%;
+  float: left;
+}
+
+#player_2_cards_3_img {
+  height: 100%;
+  width: 100%;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#msg_area {
+  float: right;
+  height: 75%;
+  width: 65%;
+  padding: 1%;
+  border: 1px solid black;
+  box-shadow: 1px 1px gray;
+  margin-top: 1%;
+}
+
+#msg {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+#msg_text {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  border: 0px;
+  padding: 0px;
+  resize: none;
+  font-size: 12px;
+  background-color: antiquewhite;
+}
+
+#middle {
+  height: 55%;
+}
+
+#game_table {
+  width: 90%;
+  height: 100%;
+  margin: auto;
+}
+
+#trump {
+  width: 25%;
+  height: 100%;
+  float: left;
+}
+
+#trump_area {
+  width: 70%;
+  height: 220px;
+  padding-top: 130px;
+  margin: auto;
+}
+
+#trump_card {
+  width: 80%;
+  height: 71%;
+  float: left;
+  margin-left: 25%;
+}
+
+#trump_card_img {
+  width: 100%;
+  height: 100%;
+}
+
+#trump_deck {
+  width: 80%;
+  height: 71%;
+  float: left;
+  margin-top: -80%;
+  margin-left: 0%;
+}
+
+#trump_deck_img {
+  width: 100%;
+  height: 100%;
+}
+
+#turns {
+  width: 65%;
+  height: 100%;
+  float: left;
+}
+
+#turns_area {
+  width: 90%;
+  margin: auto;
+  height: 95%;
+  padding-top: 1%;
+}
+
+#turn_3 {
+  width: 100%;
+  height: 30%;
+  background-color: whitesmoke;
+  padding: 10px 0px;
+  border-radius: 4px;
+}
+
+#turn_3_p {
+  margin: 57px 30px 0px -2px;
+  float: left;
+  rotate: -90deg;
+  font-family: courier;
+  font-size: 12px;
+  color: gray;
+}
+
+#turn_3_cards {
+  width: 60%;
+  height: 100%;
+  margin: auto;
+}
+
+#turn_3_card_1 {
+  height: 140px;
+  width: 37%;
+  float: left;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#turn_3_card_2 {
+  height: 140px;
+  width: 37%;
+  float: right;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#turn_2 {
+  width: 100%;
+  height: 30%;
+  background-color: whitesmoke;
+  padding: 10px 0px;
+  border-radius: 4px;
+}
+
+#turn_2_p {
+  margin: 57px 30px 0px -2px;
+  float: left;
+  rotate: -90deg;
+  font-family: courier;
+  font-size: 12px;
+  color: gray;
+}
+
+#turn_2_cards {
+  width: 60%;
+  height: 100%;
+  margin: auto;
+}
+
+#turn_2_card_1 {
+  height: 140px;
+  width: 37%;
+  float: left;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#turn_2_card_1_img {
+  height: 100%;
+  width: 100%;
+}
+
+#turn_2_card_2 {
+  height: 140px;
+  width: 37%;
+  float: right;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#turn_1 {
+  width: 100%;
+  height: 30%;
+  background-color: whitesmoke;
+  padding: 10px 0px;
+  border-radius: 4px;
+}
+
+#turn_1_p {
+  margin: 57px 30px 0px -2px;
+  float: left;
+  rotate: -90deg;
+  font-family: courier;
+  font-size: 12px;
+  color: gray;
+}
+
+#turn_1_cards {
+  width: 60%;
+  height: 100%;
+  margin: auto;
+}
+
+#turn_1_card_1 {
+  height: 140px;
+  width: 37%;
+  float: left;
+  border: 3px solid green;
+  border-radius: 10px;
+  box-shadow: 2px 2px lightgreen;
+}
+
+#turn_1_card_1_img {
+  height: 100%;
+  width: 100%;
+}
+
+#turn_1_card_2 {
+  height: 140px;
+  width: 37%;
+  float: right;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#turn_1_card_2_img {
+  height: 100%;
+  width: 100%;
+}
+
+#score {
+  width: 10%;
+  height: 100%;
+  float: right;
+}
+
+#score_area {
+  width: 70%;
+  height: 30%;
+  padding-top: 300%;
+  margin: auto;
+}
+
+#score_text {
+  width: 100%;
+  height: 100%;
+}
+
+#score_text_p2 {
+  width: 50%;
+  margin: auto;
+  font-family: Courier;
+  font-size: 24px;
+  background-color: #faa0a0;
+  text-align: center;
+}
+
+#score_text_x {
+  width: 25%;
+  margin: auto;
+  font-family: Courier;
+  font-size: 16px;
+  text-align: center;
+}
+
+#score_text_p1 {
+  width: 50%;
+  margin: auto;
+  font-family: Courier;
+  font-size: 24px;
+  background-color: beige;
+  text-align: center;
+}
+
+#footer {
+  height: 29%;
+  border-top: 3px double black;
+}
+
+#player_1_controls {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+}
+
+#player_1_buttons {
+  width: 39%;
+  height: 78%;
+  float: left;
+  padding: 2.5% 0.5%;
+}
+
+#player_1_buttons_1 {
+  height: 20%;
+  margin: 0% 3% 5% 3%;
+}
+
+#player_1_buttons_1_btn {
+  width: 100%;
+  height: 100%;
+  font-family: courier;
+  border: 1px solid black;
+  box-shadow: 1px 1px gray;
+  background-color: white;
+}
+
+#player_1_buttons_1_btn:hover {
+  background-color: #eee;
+}
+
+#player_1_buttons_1_btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+#player_1_buttons_2 {
+  height: 20%;
+  background-color: white;
+  margin: 0% 3% 5% 3%;
+}
+
+#player_1_buttons_2_btn {
+  width: 100%;
+  height: 100%;
+  font-family: courier;
+  border: 1px solid black;
+  box-shadow: 1px 1px gray;
+  background-color: white;
+}
+
+#player_1_buttons_2_btn:hover {
+  background-color: #eee;
+}
+
+#player_1_buttons_2_btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+#player_1_buttons_3 {
+  height: 20%;
+  background-color: white;
+  margin: 0% 3% 5% 3%;
+}
+
+#player_1_buttons_3_btn {
+  width: 100%;
+  height: 100%;
+  font-family: courier;
+  border: 1px solid black;
+  box-shadow: 1px 1px gray;
+  background-color: white;
+}
+
+#player_1_buttons_3_btn:hover {
+  background-color: #eee;
+}
+
+#player_1_buttons_3_btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+#player_1_buttons_4 {
+  height: 20%;
+  background-color: white;
+  margin: 0% 3% 0% 3%;
+}
+
+#player_1_buttons_4_btn {
+  width: 100%;
+  height: 100%;
+  font-family: courier;
+  border: 1px solid black;
+  box-shadow: 1px 1px gray;
+  background-color: white;
+}
+
+#player_1_buttons_4_btn:hover {
+  background-color: #eee;
+}
+
+#player_1_buttons_4_btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+#player_1_cards {
+  width: 59%;
+  height: 78%;
+  float: left;
+  padding: 3.5% 0% 3% 1%;
+}
+
+#player_1_cards_1 {
+  width: 115px;
+  height: 186px;
+  float: left;
+  margin-right: 3%;
+}
+
+#player_1_cards_1_img {
+  width: 100%;
+  height: 100%;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#player_1_cards_2 {
+  width: 115px;
+  height: 186px;
+  float: left;
+  margin-right: 3%;
+}
+
+#player_1_cards_2_img {
+  width: 100%;
+  height: 100%;
+}
+
+#player_1_cards_3 {
+  width: 115px;
+  height: 186px;
+  float: left;
+}
+
+#player_1_cards_3_img {
+  width: 100%;
+  height: 100%;
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+#player_1_name {
+  width: 90%;
+  height: 10%;
+  margin: auto;
+}
+
+#player_1_name_p {
+  margin: 0px;
+  float: right;
+  padding-right: 5px;
+  font-size: 15px;
+  font-family: 'Courier New', Courier, monospace;
+  padding-left: 5px;
+  background-color: beige;
+}

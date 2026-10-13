@@ -1,0 +1,289 @@
+/* Class */
+.card {
+  border: 1px dotted gray;
+  border-radius: 2px;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+}
+
+.turn {
+  background-color: whitesmoke;
+  border-radius: 4px;
+  display: grid;
+  grid-template-rows: 1fr 5fr 1fr;
+}
+
+.turn-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 60px;
+}
+
+.turn-card {
+  height: 120px;
+  width: 80px;
+}
+
+.turn-label {
+  text-align: center;
+  padding-top: 5px;
+  color: gray;
+}
+
+.turn-winner {
+  border: 3px solid green;
+  border-radius: 10px;
+  box-shadow: 2px 2px lightgreen;
+  margin-top: -4px;
+  margin-left: -4px;
+}
+
+.btn {
+  width: 100%;
+  height: 100%;
+  font-family: courier;
+  border: 1px solid black;
+  box-shadow: 1px 1px gray;
+  background-color: white;
+}
+
+.btn:hover {
+  background-color: #eee;
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.player1-card {
+  width: 100px;
+  height: 160px;
+}
+
+/* Rules */
+body {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 10px;
+}
+
+#app {
+  margin: auto;
+  width: 720px;
+  height: 100dvh;
+  background-color: antiquewhite;
+  display: grid;
+  grid-template-rows: 3fr 11fr 6fr;
+}
+
+#header {
+  display: grid;
+  grid-template-rows: 1fr 4fr;
+  padding: 0% 5%;
+}
+
+#player_2_name_p {
+  margin: 4px 0px 0px 0px;
+  float: left;
+  padding-right: 5px;
+  font-size: 15px;
+  padding-left: 5px;
+  background-color: #faa0a0;
+}
+
+#player_2_round_p {
+  margin: 2px 0px 0px 0px;
+  float: right;
+  font-size: 17px;
+  font-style: italic;
+}
+
+#header_area {
+  display: grid;
+  grid-template-columns: 7fr 13fr;
+}
+
+#player_2_cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  padding: 5px 10px 10px 10px;
+}
+
+#player_2_cards_1 {
+  width: 60px;
+  height: 90px;
+}
+
+#player_2_cards_2 {
+  width: 60px;
+  height: 90px;
+}
+
+#player_2_cards_3 {
+  width: 60px;
+  height: 90px;
+}
+
+#msg_area {
+  padding: 5px 2px;
+}
+
+#msg {
+  width: 96%;
+  height: 76%;
+  padding: 6px 6px;
+  border: 1px solid black;
+  box-shadow: 1px 1px gray;
+}
+
+#msg_text {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  border: 0px;
+  padding: 0px;
+  resize: none;
+  font-size: 12px;
+  background-color: antiquewhite;
+}
+
+#middle {
+  padding: 0% 5%;
+}
+
+#game_table {
+  display: grid;
+  grid-template-columns: 5fr 13fr 2fr;
+  height: 100%;
+}
+
+#trump_area {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+#trump_deck {
+  height: 120px;
+  width: 80px;
+  margin-top: 40px;
+  margin-left: 20px;
+}
+
+#trump_card {
+  width: 80px;
+  height: 120px;
+  margin-left: 50px;
+  float: left;
+}
+
+#trump_deck_img {
+  position: relative;
+  top: -75px;
+}
+
+#turns {
+  padding: 10px 0px;
+}
+
+#turns_area {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-gap: 4px;
+}
+
+#turn_3_card_1 {
+  justify-self: end;
+}
+
+#turn_2_card_1 {
+  justify-self: end;
+}
+
+#turn_1_card_1 {
+  justify-self: end;
+}
+
+#score {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+#score_area {
+  padding: 45px 10px;
+}
+
+#score_text {
+  width: 100%;
+  height: 100%;
+}
+
+#score_text_p2 {
+  width: 50%;
+  margin: auto;
+  font-family: Courier;
+  font-size: 24px;
+  background-color: #faa0a0;
+  text-align: center;
+}
+
+#score_text_x {
+  width: 25%;
+  margin: auto;
+  font-family: Courier;
+  font-size: 16px;
+  text-align: center;
+}
+
+#score_text_p1 {
+  width: 50%;
+  margin: auto;
+  font-family: Courier;
+  font-size: 24px;
+  background-color: beige;
+  text-align: center;
+}
+
+#footer {
+  padding: 0% 5%;
+  display: grid;
+  grid-template-rows: 9fr 1fr;
+}
+
+#player_1_controls {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+}
+
+#player_1_buttons {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
+  padding: 20px 0px;
+}
+
+#player_1_cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  padding: 20px 15px;
+}
+
+#player_1_name_p {
+  margin: 0px;
+  float: right;
+  padding-right: 5px;
+  font-size: 15px;
+  padding-left: 5px;
+  background-color: beige;
+}

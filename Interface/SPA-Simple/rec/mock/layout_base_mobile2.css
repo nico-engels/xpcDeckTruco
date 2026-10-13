@@ -1,0 +1,201 @@
+/* Class */
+.card {
+  background-color: white;
+}
+
+.turn {
+  background-color: whitesmoke;
+  border-radius: 4px;
+  display: grid;
+  grid-template-rows: 1fr 5fr 1fr;
+}
+
+.turn-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 60px;
+}
+
+.turn-card {
+  height: 100%;
+  width: 60%;
+}
+
+.btn-div {
+  background-color: white;
+}
+
+.player1-card {
+  width: 100%;
+  height: 60%;
+}
+
+/* Rules */
+body {
+  margin: 0;
+}
+
+#app {
+  margin: auto;
+  width: 720px;
+  height: 100dvh;
+  background-color: antiquewhite;
+  display: grid;
+  grid-template-rows: 3fr 11fr 6fr;
+}
+
+#header {
+  background-color: blue;
+  display: grid;
+  grid-template-rows: 1fr 4fr;
+  padding: 0% 5%;
+}
+
+#player_2_name_round {
+  background-color: lightblue;
+}
+
+#header_area {
+  display: grid;
+  grid-template-columns: 7fr 13fr;
+}
+
+#player_2_cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  padding: 5px 10px 10px 10px;
+  background-color: darkblue;
+}
+
+#player_2_cards_1 {
+  width: 60px;
+  height: 90px;
+}
+
+#player_2_cards_2 {
+  width: 60px;
+  height: 90px;
+}
+
+#player_2_cards_3 {
+  width: 60px;
+  height: 90px;
+}
+
+#msg_area {
+  padding: 5px 0px 5px 20px;
+}
+
+#msg {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+}
+
+#middle {
+  background-color: red;
+  padding: 0% 5%;
+}
+
+#game_table {
+  display: grid;
+  grid-template-columns: 5fr 13fr 2fr;
+  height: 100%;
+}
+
+#trump {
+  background-color: salmon;
+}
+
+#trump_area {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+#trump_deck {
+  background-color: whitesmoke;
+  height: 120px;
+  width: 80px;
+  margin-top: 40px;
+  margin-left: 20px;
+  float: left;
+}
+
+#trump_card {
+  width: 80px;
+  height: 120px;
+  margin-left: 50px;
+}
+
+#turns {
+  background-color: darkred;
+  padding: 10px 0px;
+}
+
+#turns_area {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-gap: 2px;
+}
+
+#turn_3_card_1 {
+  justify-self: end;
+}
+
+#turn_2_card_1 {
+  justify-self: end;
+}
+
+#turn_1_card_1 {
+  justify-self: end;
+}
+
+#score {
+  background-color: orange;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+#score_area {
+  padding: 10px;
+}
+
+#score_text {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+}
+
+#footer {
+  background-color: yellow;
+  padding: 0% 5%;
+  display: grid;
+  grid-template-rows: 9fr 1fr;
+}
+
+#player_1_controls {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+}
+
+#player_1_buttons {
+  background-color: lightyellow;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-gap: 10px;
+}
+
+#player_1_cards {
+  background-color: gold;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  padding: 20px 15px;
+}
+
+#player_1_name {
+  background-color: yellowgreen;
+}
