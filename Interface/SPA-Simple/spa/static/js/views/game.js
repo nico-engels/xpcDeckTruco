@@ -238,7 +238,10 @@ export default class extends AbstractView {
         elem.onclick = async () => {
           await this.consumeApi('/api-truco/round/end', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Authorization': `Bearer ${this.jwtToken}`,
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
               roundId: this.roundId,
             }),
@@ -300,9 +303,15 @@ export default class extends AbstractView {
   }
 
   async loadGameInfo(gameId) {
-    const gameInfo = await this.consumeApi(`/api-truco/game/info/${gameId}`, { method: 'GET' });
+    const gameInfo = await this.consumeApi(`/api-truco/game/info/${gameId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.jwtToken}`,
+      },
+    });
 
-    if (!gameInfo) return;
+    if (!gameInfo)
+      return;
 
     this.player1 = gameInfo.player1;
     this.player2 = gameInfo.player2;
@@ -363,7 +372,12 @@ export default class extends AbstractView {
   }
 
   async loadLastRound(gameId) {
-    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`, { method: 'GET' });
+    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.jwtToken}`,
+      },
+    });
 
     if (!lastRound) return;
 
@@ -436,7 +450,12 @@ export default class extends AbstractView {
   }
 
   async loadLastRoundId(gameId) {
-    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`, { method: 'GET' });
+    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.jwtToken}`,
+      },
+    });
 
     if (!lastRound) return;
 
@@ -444,7 +463,12 @@ export default class extends AbstractView {
   }
 
   async check(roundId) {
-    const checkData = await this.consumeApi(`/api-truco/turn/check/${roundId}`, { method: 'GET' });
+    const checkData = await this.consumeApi(`/api-truco/turn/check/${roundId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.jwtToken}`,
+      },
+    });
 
     if (!checkData || (checkData.lastTurnSeq == this.turnSeq && !this.firstRun && !this.firstRoundRun)) return;
 
@@ -541,7 +565,10 @@ export default class extends AbstractView {
   async playCard(which) {
     const playData = await this.consumeApi('/api-truco/turn/play', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${this.jwtToken}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         roundId: this.roundId,
         prevSeq: this.turnSeq,
@@ -549,7 +576,8 @@ export default class extends AbstractView {
       }),
     });
 
-    if (!playData) return;
+    if (!playData)
+      return;
 
     document.getElementById('msg_text').value = document.getElementById('msg_text').value.replace('> É sua vez.\n', '');
 
@@ -559,7 +587,10 @@ export default class extends AbstractView {
   async playAction(which) {
     const playData = await this.consumeApi('/api-truco/turn/play', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${this.jwtToken}`,
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         roundId: this.roundId,
         prevSeq: this.turnSeq,
@@ -575,7 +606,12 @@ export default class extends AbstractView {
   }
 
   async afterLoad() {
-    if (!this.params.gameId) return;
+    if (!this.params.gameId)
+      return;
+
+    this.jwtToken = sessionStorage.getItem('jwtToken');
+    if (!this.jwtToken)
+      return;
 
     const lastMsg = await this.loadGameInfo(this.params.gameId);
     const lastRoundId = await this.loadLastRound(this.params.gameId);

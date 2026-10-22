@@ -110,6 +110,8 @@ export class TurnUsecase
 
     for (const t of round.turns) {
 
+      askElevate = '';
+
       if (t.player.id === round.game.player1.id) {
         const remInd = player1CardsRemaining.indexOf(t.cardOrAction);
         if (remInd !== -1) {
@@ -245,9 +247,11 @@ export class TurnUsecase
     if (roundWinner) {
       nextPlayerId = undefined;
     } else {
-      if (askElevate) {
-        possibleActions.push('Ys');
-        possibleActions.push('No');
+      if (askElevate?.length) {
+        if (askElevate !== 'Ys' && askElevate !== 'No') {
+          possibleActions.push('Ys');
+          possibleActions.push('No');
+        }
 
         if (askElevate == 'Tr') {
           possibleActions.push('Sx');
@@ -399,19 +403,20 @@ export class TurnUsecase
       throw new TurnError(TurnErrorCodes.BUSINESS, 'Elevation needs a answer!');
     }
 
-    if ((actionsElevations.find((x) => x.elevation === cardOrAction)?.score ?? 13) <= roundTurns.round.score) {
+    const actionInfo = actionsElevations.find((x) => x.elevation === cardOrAction);
+    const turnElevation = actionsElevations.find((x) => x.elevation === roundTurns.askElevate);
+
+    if (actionInfo && actionInfo.score <= roundTurns.round.score) {
       throw new TurnError(TurnErrorCodes.BUSINESS, 'Elevation already done!');
     }
 
-    if (
-      (actionsElevations.find((x) => x.elevation === cardOrAction)?.score ?? 14) <=
-      (actionsElevations.find((x) => x.elevation === roundTurns.askElevate)?.score ?? 13)
-    ) {
+    if (actionInfo && turnElevation && actionInfo.score <= turnElevation.score) {
+      this.logger.warn(`Elevation ${cardOrAction} but turn has ${roundTurns.askElevate}.`);
       throw new TurnError(TurnErrorCodes.BUSINESS, 'Elevation aswered must be upper!');
     }
 
-    if (roundTurns.askElevate?.length && (cardOrAction === 'Ys' || actionsElevations.find((x) => x.elevation === cardOrAction))) {
-      roundTurns.round.score = actionsElevations.find((x) => x.elevation === roundTurns.askElevate)?.score ?? roundTurns.round.score;
+    if (roundTurns.askElevate?.length && (cardOrAction === 'Ys' || actionInfo)) {
+      roundTurns.round.score = actionInfo?.score ?? roundTurns.round.score;
       this.roundRepo.updateRound(roundTurns.round);
     }
 

@@ -1,30 +1,29 @@
-# xpcDeckTrucoFE-SPASimple - Jogo de Truco Paulista usando API
+# SPASimple - Jogo de Truco Paulista usando API
 
-Front-end desenvolvido usando Typescript simples para demonstrar o consumo de API
-back-end (xpcDeckTrucoBE).
+Front-end simples desenvolvido para demonstrar o consumo da API back-end.
 
 Usa o conceito de Single Page Aplication (SPA) onde existe apenas uma página
 HTML e a navegação e renderização de páginas é feito via Javascript no
 navegador.
 
+O servidor utilizado é o nginx para servir as páginas estáticas de html e
+recursos e também como proxy encaminhando as requisições para a API back-end.
+
 Atualmente apenas cria novos jogos pela API de jogos pré-autorizados.
 
 ## Tecnologias
 
-Typescript 6
+Clientside HTML + CSS + Javascript
 
-NodeJs 24
+nginx
 
 ## Arquitetura
 
-Arquivo de rotas no index.ts:
+O roteamento é feito do lado do cliente e encaminhado ao nginx.
 
 `/static e /*`: Rotas utilizada pelo SPA.
 
 `/api-truco/`: Rotas de consumo do back-end acessadas pelo SPA via fetch.
-
-`/lnk/`: Módulo de geração de links com jogos pré-autorizados onde o link serve
-de chave para autenticar o usuário.
 
 Rotas no SPA /spa/static/js/index.js:
 
@@ -38,16 +37,27 @@ Rotas no SPA /spa/static/js/index.js:
 
 `/pre-autz/lista`: Lista dos jogos pré-autorizados criados.
 
-Utilizado cookies para controle de sessão.
+`/lnk/`: Módulo de geração de links com jogos pré-autorizados onde o link serve
+de chave para autenticar o usuário.
+
+Utilizado localStorage e sessionStorage para controle de sessão.
 
 ## Executando
 
-Deve ser definido no arquivo `.env`:
+Deve ser configurado no arquivo nginx.conf:
 
-- BASE_URL_API: URL para o servidor de back-end.
-- TEMP_TOKEN_XT_ADMIN: Token JWT para a criação de jogos pré-autorizados.
-- COOKIE_SCRT: Secret (string) utilizado ao assinar o cookie. Informar uma
-  string aleatória.
+location /api-truco/ {
+  proxy_pass http://localhost:7777/;
+}
 
-O servidor é https e escuta na porta 7779 (https). O certificado deve ser
-informado na pasta rec/sslcert/(selfsigned.key e selfsigned.crt).
+Para o local onde servidor da API esteja executando.
+
+Rodar
+
+```nginx -p "{seu path absoluto}/SPA-Simple/" -c nginx.conf```
+
+O front executará na porta 7781 conexões HTTP.
+
+## Demonstração
+
+![Demonstração](game-demo.gif 'Demonstração')

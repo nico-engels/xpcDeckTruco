@@ -14,7 +14,7 @@ encerramento do jogo.
 
 Typescript 6
 
-NodeJs 24
+Node 26
 
 TypeORM 1.1
 

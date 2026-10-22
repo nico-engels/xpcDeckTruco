@@ -3,6 +3,7 @@ import games from './views/games.js';
 import home from './views/home.js';
 import preAuthLinks from './views/preAuthLinks.js';
 import preAuthList from './views/preAuthList.js';
+import consumeLink from './views/consumeLink.js';
 
 function navigateTo(url) {
   history.pushState(null, null, url);
@@ -31,6 +32,7 @@ async function router() {
     { path: '/jogos/:gameId', view: (params) => new game(params) },
     { path: '/pre-autz/lista', view: (params) => new preAuthList(params) },
     { path: '/pre-autz/:player1/:player2', view: (params) => new preAuthLinks(params) },
+    { path: '/lnk/:linkToken/:player', view: (params) => new consumeLink(params) },
   ];
 
   const potencialMatches = routes.map((route) => {

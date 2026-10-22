@@ -26,9 +26,13 @@ export default class extends AbstractView {
   }
 
   async afterLoad() {
+    const adminToken = prompt('xtAdmin');
     const req = await fetch('/api-truco/auth/pre_game/list', {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${adminToken}`,
+        'Content-Type': 'application/json'
+      },
     });
 
     if (req.status === 200) {

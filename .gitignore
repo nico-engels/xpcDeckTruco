@@ -1,9 +1,5 @@
 .vscode/
-Interface/SPA-Simple/.env
-Interface/SPA-Simple/dist
-Interface/SPA-Simple/node_modules
-Interface/SPA-Simple/rec/sslcert
-Interface/SPA-Simple/package-lock.json
+Interface/SPA-Simple/logs
 Service/Truco/.env
 Service/Truco/coverage/
 Service/Truco/dist/

@@ -25,7 +25,7 @@ export class GameUsecase
   ) {}
 
   public async infoGame(input: InfoGameInput): Promise<InfoGameResult> {
-    const { token: { gameId: tokenGameId }, gameId } = input;
+    const { token: { gameId: tokenGameId, userId }, gameId } = input;
 
     if (tokenGameId && gameId !== tokenGameId) {
       this.logger.error(`GameId in token ${tokenGameId} not match the ${gameId} in request`);
@@ -39,14 +39,33 @@ export class GameUsecase
       throw new GameError(GameErrorCodes.NOT_FOUND);
     }
 
+    let player1Id = game.player1.id!;
+    let player1 = game.player1.username;
+    let player1Score = game.player1Score;
+    let player2Id = game.player2.id!;
+    let player2 = game.player2.username;
+    let player2Score = game.player2Score;
+    let readonly = false;
+
+    if (userId === game.player2.id) {
+
+      [player1Id, player2Id] = [player2Id, player1Id];
+      [player1, player2] = [player2, player1];
+      [player1Score, player2Score] = [player2Score, player1Score];
+
+    } else if (userId != game.player1.id && userId != game.player2.id) {
+      readonly = true;
+    }
+
     return {
       id: game.id,
-      player1Id: game.player1?.id,
-      player1: game.player1?.username,
-      player1Score: game.player1Score,
-      player2Id: game.player2?.id,
-      player2: game.player2?.username,
-      player2Score: game.player2Score,
+      player1Id,
+      player1,
+      player1Score,
+      player2Id,
+      player2,
+      player2Score,
+      readonly,
       startPlay: game.startPlay,
       lastPlay: game.lastPlay,
       lastRoundId: game.rounds?.at(-1)?.id,

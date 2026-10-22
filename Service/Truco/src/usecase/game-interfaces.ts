@@ -21,12 +21,13 @@ export type InfoGameInput = Infer<typeof InfoGameInputSchema>;
 
 export interface InfoGameResult {
   id?: number;
-  player1Id?: number;
-  player1?: string;
-  player1Score?: number;
-  player2Id?: number;
-  player2?: string;
-  player2Score?: number;
+  player1Id: number;
+  player1: string;
+  player1Score: number;
+  player2Id: number;
+  player2: string;
+  player2Score: number;
+  readonly: boolean;
   startPlay?: Date;
   lastPlay?: Date;
   lastRoundId?: number;
