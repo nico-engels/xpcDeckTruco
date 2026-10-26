@@ -79,7 +79,7 @@ describe('#authentication', () => {
 
     const logger = new ConsoleLogger();
 
-    usecaseRound = new RoundUsecase(mockRoundRepo, mockGameRepo);
+    usecaseRound = new RoundUsecase(mockRoundRepo, mockGameRepo, logger);
     usecasePreGame = new PreGameUsecase(mockPreAuthGameRepo, mockUserRepo, mockGameRepo, usecaseRound, logger);
     controllerPreGame = new PreGameController(usecasePreGame);
   });

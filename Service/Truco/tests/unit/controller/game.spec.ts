@@ -52,9 +52,11 @@ describe('#game', () => {
       initializeDbEngine: jest.fn(),
     };
 
-    usecaseRound = new RoundUsecase(mockRoundRepo, mockGameRepo);
+    const logger = new ConsoleLogger();
 
-    usecase = new GameUsecase(mockGameRepo, mockUserRepo, usecaseRound, new ConsoleLogger());
+    usecaseRound = new RoundUsecase(mockRoundRepo, mockGameRepo, logger);
+
+    usecase = new GameUsecase(mockGameRepo, mockUserRepo, usecaseRound, logger);
     controller = new GameController(usecase);
   });
 

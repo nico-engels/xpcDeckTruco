@@ -83,7 +83,7 @@ export class TurnUsecase
     return turnWin.draw;
   }
 
-  private async allInfoTurnsByRound(roundId: number): Promise<InfoRoundsLogic | null> {
+  private async allInfoTurnsByRound(roundId: number, playerId: number): Promise<InfoRoundsLogic | null> {
     const round = await this.roundRepo.getRoundById(roundId);
 
     if (!round) {
@@ -247,29 +247,31 @@ export class TurnUsecase
     if (roundWinner) {
       nextPlayerId = undefined;
     } else {
-      if (askElevate?.length) {
-        if (askElevate !== 'Ys' && askElevate !== 'No') {
-          possibleActions.push('Ys');
-          possibleActions.push('No');
-        }
+      if (nextPlayerId === playerId) {
+        if (askElevate?.length) {
+          if (askElevate !== 'Ys' && askElevate !== 'No') {
+            possibleActions.push('Ys');
+            possibleActions.push('No');
+          }
 
-        if (askElevate == 'Tr') {
-          possibleActions.push('Sx');
-        } else if (askElevate == 'Sx') {
-          possibleActions.push('Nn');
-        }
-        if (askElevate == 'Nn') {
-          possibleActions.push('Tw');
-        }
-      } else if (!round.turns?.length || (round.turns.length && round.turns?.at(-1)?.cardOrAction != 'Ys')) {
-        if (round.score == 1) {
-          possibleActions.push('Tr');
-        } else if (round.score == 3) {
-          possibleActions.push('Sx');
-        } else if (round.score == 6) {
-          possibleActions.push('Nn');
-        } else if (round.score == 9) {
-          possibleActions.push('Tw');
+          if (askElevate == 'Tr') {
+            possibleActions.push('Sx');
+          } else if (askElevate == 'Sx') {
+            possibleActions.push('Nn');
+          }
+          if (askElevate == 'Nn') {
+            possibleActions.push('Tw');
+          }
+        } else if (!round.turns?.length || (round.turns.length && round.turns?.at(-1)?.cardOrAction != 'Ys')) {
+          if (round.score == 1) {
+            possibleActions.push('Tr');
+          } else if (round.score == 3) {
+            possibleActions.push('Sx');
+          } else if (round.score == 6) {
+            possibleActions.push('Nn');
+          } else if (round.score == 9) {
+            possibleActions.push('Tw');
+          }
         }
       }
       possibleActions.push('Gu');
@@ -293,7 +295,7 @@ export class TurnUsecase
   public async checkTurn(input: CheckTurnInput): Promise<CheckTurnResult> {
     const { token: { userId }, roundId } = input;
 
-    const roundTurns = await this.allInfoTurnsByRound(roundId);
+    const roundTurns = await this.allInfoTurnsByRound(roundId, userId);
 
     if (!roundTurns || !roundTurns.round) {
       throw new TurnError(TurnErrorCodes.NOT_FOUND);
@@ -347,7 +349,7 @@ export class TurnUsecase
   public async playTurn(input: PlayTurnInput): Promise<PlayTurnResult> {
     const { token: { userId }, roundId, prevSeq, cardOrAction } = input;
 
-    const roundTurns = await this.allInfoTurnsByRound(roundId);
+    const roundTurns = await this.allInfoTurnsByRound(roundId, userId);
 
     if (!roundTurns || !roundTurns.round) {
       throw new TurnError(TurnErrorCodes.NOT_FOUND);
@@ -377,7 +379,7 @@ export class TurnUsecase
       throw new TurnError(TurnErrorCodes.BUSINESS, 'Invalid sequence!');
     }
 
-    if (roundTurns.nextPlayerId !== userId) {
+    if (roundTurns.nextPlayerId !== userId && cardOrAction !== 'Gu') {
       throw new TurnError(TurnErrorCodes.NOT_YOUR_TURN, 'Not your turn!');
     }
 
@@ -416,8 +418,11 @@ export class TurnUsecase
     }
 
     if (roundTurns.askElevate?.length && (cardOrAction === 'Ys' || actionInfo)) {
-      roundTurns.round.score = actionInfo?.score ?? roundTurns.round.score;
-      this.roundRepo.updateRound(roundTurns.round);
+      const newScore = actionInfo?.score ?? turnElevation?.score;
+      this.logger.info(`Elevated round score from ${roundTurns.round.score} to ${newScore}`);
+
+      roundTurns.round.score = newScore!;
+      await this.roundRepo.updateRound(roundTurns.round);
     }
 
     const turn = await this.repo.createTurn({

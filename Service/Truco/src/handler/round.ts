@@ -12,7 +12,7 @@ export class RoundHandler
     const logger = new PinoLogger(req.log);
     const repo = new TypeOrmRoundRepository(logger);
     const gameRepo = new TypeOrmGameRepository(logger);
-    const usecase = new RoundUsecase(repo, gameRepo);
+    const usecase = new RoundUsecase(repo, gameRepo, logger);
     const controller = new RoundController(usecase);
 
     await repo.initializeDbEngine();

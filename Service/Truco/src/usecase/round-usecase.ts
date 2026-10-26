@@ -13,6 +13,7 @@ import {
   LastRoundResult
 } from "@usecase/round-interfaces";
 import { chunkSubstr } from '@app/util';
+import { Logger } from '@app/util/logger';
 import { GameError } from '@usecase/game-usecase';
 import { GameErrorCodes } from '@usecase/game-interfaces';
 import { UsecaseError } from '@usecase/usecase-error';
@@ -24,6 +25,7 @@ export class RoundUsecase
   constructor(
     private repo: RoundRepository,
     private gameRepo: GameRepository,
+    private logger: Logger,
   ) {}
 
   private generateTrucoDeckCards(count: number) {
@@ -111,7 +113,7 @@ export class RoundUsecase
     const trumpCard = cards[6];
 
     const starterPlayer = nextStarterPlayer ??
-      Math.floor(Math.random() * 2) ? game.player1 : game.player2;
+      (Math.floor(Math.random() * 2) ? game.player1 : game.player2);
 
     const round = await this.repo.createRound({
       game,
@@ -341,7 +343,7 @@ export class RoundUsecase
       throw new RoundError(RoundErrorCodes.NOT_FOUND);
     }
 
-    if (roundTurns.round.game?.player1?.id !== userId && roundTurns.round.game?.player2?.id !== userId) {
+    if (roundTurns.round.game.player1.id !== userId && roundTurns.round.game.player2.id !== userId) {
       throw new RoundError(RoundErrorCodes.FORBIDDEN, 'You do not participate in this game!');
     }
 
@@ -355,24 +357,25 @@ export class RoundUsecase
 
     let winnerUser: users | undefined;
     if (roundTurns.roundWinner === turnWin.player1) {
-      winnerUser = roundTurns.round.game?.player1;
-      roundTurns.round.game!.player1Score = Math.min((roundTurns.round.game?.player1Score ?? 0) + (roundTurns.round.score ?? 0), 12);
+      winnerUser = roundTurns.round.game.player1;
+      roundTurns.round.game.player1Score = Math.min(roundTurns.round.game.player1Score + roundTurns.round.score, 12);
     } else if (roundTurns.roundWinner === turnWin.player2) {
-      winnerUser = roundTurns.round.game?.player2;
-      roundTurns.round.game!.player2Score = Math.min((roundTurns.round.game?.player2Score ?? 0) + (roundTurns.round.score ?? 0), 12);
+      winnerUser = roundTurns.round.game.player2;
+      roundTurns.round.game.player2Score = Math.min(roundTurns.round.game.player2Score + roundTurns.round.score, 12);
     }
 
-    if (roundTurns.round.game?.player1Score === 12 || roundTurns.round.game?.player2Score === 12) {
+    if (roundTurns.round.game.player1Score === 12 || roundTurns.round.game.player2Score === 12) {
       roundTurns.round.game.endPlay = new Date();
       roundTurns.round.game.winnerPlayer = winnerUser;
     }
 
     let nextStartPlayer: users;
-    if (roundTurns.round.starterPlayer?.id === roundTurns.round.game?.player1?.id) {
-      nextStartPlayer = roundTurns.round.game?.player2;
+    if (roundTurns.round.starterPlayer.id === roundTurns.round.game.player1.id) {
+      nextStartPlayer = roundTurns.round.game.player2;
     } else {
-      nextStartPlayer = roundTurns.round.game?.player1;
+      nextStartPlayer = roundTurns.round.game.player1;
     }
+    this.logger.info(`Current round started by ${roundTurns.round.starterPlayer.username} next round by ${nextStartPlayer.username}`);
 
     roundTurns.round.finished = true;
     roundTurns.round.winnerPlayer = winnerUser;
@@ -391,27 +394,27 @@ export class RoundUsecase
           startPlayerId: number;
         }
       | undefined;
-    if (roundTurns.round.game?.player1Score !== 12 && roundTurns.round.game?.player2Score !== 12) {
-      newRoundSeq = await this.newRound(roundTurns.round.game!, (roundTurns.round.seq ?? 0) + 1, nextStartPlayer);
+    if (roundTurns.round.game.player1Score !== 12 && roundTurns.round.game.player2Score !== 12) {
+      newRoundSeq = await this.newRound(roundTurns.round.game!, roundTurns.round.seq + 1, nextStartPlayer);
 
-      if (roundTurns.round.game?.player1?.id === userId) {
+      if (roundTurns.round.game.player1.id === userId) {
         playerCards = newRoundSeq.player1Cards;
       } else {
         playerCards = newRoundSeq.player2Cards;
       }
 
       nextRound = {
-        id: newRoundSeq.id ?? 0,
-        seq: newRoundSeq.seq ?? 0,
-        playerCards: playerCards ?? '',
-        trumpCard: newRoundSeq.trumpCard ?? '',
-        startPlayerId: nextStartPlayer.id ?? 0
+        id: newRoundSeq.id!,
+        seq: newRoundSeq.seq,
+        playerCards: playerCards,
+        trumpCard: newRoundSeq.trumpCard,
+        startPlayerId: nextStartPlayer.id!,
       };
     }
 
     return {
       roundId,
-      winnerId: winnerUser?.id ?? 0,
+      winnerId: winnerUser?.id!,
       finished: true,
       nextRound,
     };

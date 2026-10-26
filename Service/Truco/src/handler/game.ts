@@ -15,7 +15,7 @@ export class GameHandler
     const repo = new TypeOrmGameRepository(logger);
     const userRepo = new TypeOrmUserRepository(logger);
     const roundRepo = new TypeOrmRoundRepository(logger);
-    const roundUsecase = new RoundUsecase(roundRepo, repo);
+    const roundUsecase = new RoundUsecase(roundRepo, repo, logger);
     const usecase = new GameUsecase(repo, userRepo, roundUsecase, logger);
     const controller = new GameController(usecase);
 

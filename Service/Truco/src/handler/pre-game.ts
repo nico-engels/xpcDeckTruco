@@ -17,7 +17,7 @@ export class PreGameHandler
     const userRepo = new TypeOrmUserRepository(logger);
     const gameRepo = new TypeOrmGameRepository(logger);
     const roundRepo = new TypeOrmRoundRepository(logger);
-    const roundUsecase = new RoundUsecase(roundRepo, gameRepo);
+    const roundUsecase = new RoundUsecase(roundRepo, gameRepo, logger);
     const usecase = new PreGameUsecase(repo, userRepo, gameRepo, roundUsecase, logger);
     const controller = new PreGameController(usecase);
 

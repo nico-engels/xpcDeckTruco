@@ -555,7 +555,7 @@ export default class extends AbstractView {
       }
     }
 
-    if (!checkData.roundWinner && checkData.nextPlayerId == this.player1Id && checkData.possibleActions) {
+    if (!checkData.roundWinner && checkData.possibleActions) {
       this.enableActions(checkData.possibleActions);
     }
 
