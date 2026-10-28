@@ -57,7 +57,7 @@ describe('#game', () => {
     usecaseRound = new RoundUsecase(mockRoundRepo, mockGameRepo, logger);
 
     usecase = new GameUsecase(mockGameRepo, mockUserRepo, usecaseRound, logger);
-    controller = new GameController(usecase);
+    controller = new GameController(usecase, logger);
   });
 
   test('Should return sucessfully', async () => {

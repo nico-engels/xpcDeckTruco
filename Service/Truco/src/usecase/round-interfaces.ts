@@ -1,4 +1,4 @@
-import { coerce, Infer, number, object, string } from 'superstruct';
+import { coerce, Infer, number, object, optional, string } from 'superstruct';
 
 import { rounds } from '@app/repository/round';
 import { AppTokenSchema } from '@usecase/common-interfaces';
@@ -54,7 +54,7 @@ export interface AllRoundsResult {
 };
 
 export const LastRoundInputSchema = object({
-  token: AppTokenSchema,
+  token: optional(AppTokenSchema),
   gameId: stringToNumber,
 });
 
@@ -63,17 +63,12 @@ export type LastRoundInput = Infer<typeof LastRoundInputSchema>;
 export interface LastRoundResult {
   id: number;
   seq: number;
+  readonly: boolean;
   playerCards: string[];
   trumpCard: string;
   score: number;
   starterPlayer: number;
   winnerPlayer?: number;
-};
-
-export enum turnWin {
-  draw,
-  player1,
-  player2,
 };
 
 export interface InfoRoundsLogic {
@@ -82,8 +77,8 @@ export interface InfoRoundsLogic {
   player2CardsArr?: string[];
   player1CardsRemaining?: string[];
   player2CardsRemaining?: string[];
-  TriTurnWinner?: turnWin[];
-  roundWinner?: turnWin;
+  triTurnWinner?: (number | '-')[];
+  roundWinner?: number;
   nextPlayerId?: number;
   askElevate?: string;
   lastTurnSeq?: number;

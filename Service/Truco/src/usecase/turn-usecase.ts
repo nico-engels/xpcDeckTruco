@@ -11,10 +11,15 @@ import {
   PlayTurnInput,
   PlayTurnResult,
   TurnErrorCodes,
-  turnWin,
 } from "@usecase/turn-interfaces";
 
 export class TurnError extends UsecaseError<TurnErrorCodes> {};
+
+enum turnWin {
+  draw,
+  player1,
+  player2,
+};
 
 export class TurnUsecase
 {
@@ -49,7 +54,7 @@ export class TurnUsecase
     ];
   }
 
-  private turnWinner(player1Card: string, player2Card: string, trumpCard: string) {
+  private turnWinner(player1Card: string, player2Card: string, trumpCard: string): turnWin {
     /*  Truco Paulista 40 cartas
             4  5  6  7  Q  J  K  A  2  3
         ♦   0  1  2  3  4  5  6  7  8  9
@@ -83,7 +88,7 @@ export class TurnUsecase
     return turnWin.draw;
   }
 
-  private async allInfoTurnsByRound(roundId: number, playerId: number): Promise<InfoRoundsLogic | null> {
+  private async allInfoTurnsByRound(roundId: number, playerId?: number): Promise<InfoRoundsLogic | null> {
     const round = await this.roundRepo.getRoundById(roundId);
 
     if (!round) {
@@ -100,9 +105,9 @@ export class TurnUsecase
     let player2LastCard: string = '';
     let player1LastAction: string = '';
     let player2LastAction: string = '';
-    const TriTurnWinner: turnWin[] = [];
+    const triTurnWinner: (number | '-')[] = [];
     let nextPlayerId: number | undefined = round.starterPlayer.id!;
-    let roundWinner: turnWin | undefined;
+    let roundWinner: number | undefined;
     let askElevate: string | undefined;
     let lastTurnSeq: number | undefined;
 
@@ -119,7 +124,7 @@ export class TurnUsecase
         }
 
         if (t.cardOrAction === 'Gu') {
-          roundWinner = turnWin.player2;
+          roundWinner = round.game.player2.id!;
         } else if (this.getActions().includes(t.cardOrAction)) {
           player1LastAction = t.cardOrAction;
         } else {
@@ -132,7 +137,7 @@ export class TurnUsecase
         }
 
         if (t.cardOrAction === 'Gu') {
-          roundWinner = turnWin.player1;
+          roundWinner = round.game.player1.id!;
         } else if (this.getActions().includes(t.cardOrAction)) {
           player2LastAction = t.cardOrAction;
         } else {
@@ -142,18 +147,20 @@ export class TurnUsecase
 
       if (player1LastCard.length && player2LastCard.length) {
         const winner = this.turnWinner(player1LastCard, player2LastCard, round.trumpCard);
-        TriTurnWinner.push(winner);
 
         switch (winner) {
           case turnWin.player1:
+            triTurnWinner.push(round.game.player1.id!);
             nextPlayerId = round.game.player1.id!;
             break;
 
           case turnWin.player2:
+            triTurnWinner.push(round.game.player2.id!);
             nextPlayerId = round.game.player2.id!;
             break;
 
           case turnWin.draw:
+            triTurnWinner.push('-');
             nextPlayerId = round.starterPlayer.id!;
             break;
         }
@@ -168,11 +175,11 @@ export class TurnUsecase
 
       if (player1LastAction.length && player2LastAction.length) {
         if (player2LastAction === 'No') {
-          roundWinner = turnWin.player1;
+          roundWinner = round.game.player1.id!;
           player1LastAction = '';
           player2LastAction = '';
         } else if (player1LastAction === 'No') {
-          roundWinner = turnWin.player2;
+          roundWinner = round.game.player2.id!;
           player1LastAction = '';
           player2LastAction = '';
         } else {
@@ -210,35 +217,35 @@ export class TurnUsecase
       lastTurnSeq = t.seq;
     }
 
-    if (!roundWinner && TriTurnWinner.length >= 2) {
-      if (TriTurnWinner.filter((x) => x === turnWin.player1).length == 2) {
-        roundWinner = turnWin.player1;
-      } else if (TriTurnWinner.filter((x) => x === turnWin.player2).length == 2) {
-        roundWinner = turnWin.player2;
+    if (!roundWinner && triTurnWinner.length >= 2) {
+      if (triTurnWinner.filter((x) => x === round.game.player1.id).length == 2) {
+        roundWinner = round.game.player1.id!;
+      } else if (triTurnWinner.filter((x) => x === round.game.player2.id).length == 2) {
+        roundWinner = round.game.player2.id!;
       } else if (
-        TriTurnWinner[0] !== turnWin.draw &&
-        (TriTurnWinner[1] === turnWin.draw || (TriTurnWinner.length === 3 && TriTurnWinner[2] === turnWin.draw))
+        triTurnWinner[0] !== '-' &&
+        (triTurnWinner[1] === '-' || (triTurnWinner.length === 3 && triTurnWinner[2] === '-'))
       ) {
-        roundWinner = TriTurnWinner[0];
-      } else if (TriTurnWinner[0] === turnWin.draw && TriTurnWinner[1] !== turnWin.draw) {
-        roundWinner = TriTurnWinner[1];
+        roundWinner = triTurnWinner[0];
+      } else if (triTurnWinner[0] === '-' && triTurnWinner[1] !== '-') {
+        roundWinner = triTurnWinner[1];
       } else if (
-        TriTurnWinner.length === 3 &&
-        TriTurnWinner[0] === turnWin.draw &&
-        TriTurnWinner[1] === turnWin.draw &&
-        TriTurnWinner[2] !== turnWin.draw
+        triTurnWinner.length === 3 &&
+        triTurnWinner[0] === '-' &&
+        triTurnWinner[1] === '-' &&
+        triTurnWinner[2] !== '-'
       ) {
-        roundWinner = TriTurnWinner[2];
+        roundWinner = triTurnWinner[2];
       } else if (
-        TriTurnWinner.length === 3 &&
-        TriTurnWinner[0] === turnWin.draw &&
-        TriTurnWinner[1] === turnWin.draw &&
-        TriTurnWinner[2] === turnWin.draw
+        triTurnWinner.length === 3 &&
+        triTurnWinner[0] === '-' &&
+        triTurnWinner[1] === '-' &&
+        triTurnWinner[2] === '-'
       ) {
         if (round.starterPlayer.id === round.game.player1.id) {
-          roundWinner = turnWin.player1;
+          roundWinner = round.game.player1.id!;
         } else {
-          roundWinner = turnWin.player2;
+          roundWinner = round.game.player2.id!;
         }
       }
     }
@@ -283,7 +290,7 @@ export class TurnUsecase
       player2CardsArr,
       player1CardsRemaining,
       player2CardsRemaining,
-      TriTurnWinner,
+      triTurnWinner,
       roundWinner,
       nextPlayerId,
       askElevate,
@@ -293,9 +300,9 @@ export class TurnUsecase
   }
 
   public async checkTurn(input: CheckTurnInput): Promise<CheckTurnResult> {
-    const { token: { userId }, roundId } = input;
+    const { token, roundId } = input;
 
-    const roundTurns = await this.allInfoTurnsByRound(roundId, userId);
+    const roundTurns = await this.allInfoTurnsByRound(roundId, token?.userId);
 
     if (!roundTurns || !roundTurns.round) {
       throw new TurnError(TurnErrorCodes.NOT_FOUND);
@@ -315,10 +322,10 @@ export class TurnUsecase
 
     let playerCards: string[] = [];
     let playerCardsRemaining: string[] = [];
-    if (roundTurns.round.game.player1.id! === userId) {
+    if (roundTurns.round.game.player1.id! === token?.userId) {
       playerCards = roundTurns.player1CardsArr ?? [];
       playerCardsRemaining = roundTurns.player1CardsRemaining ?? [];
-    } else if (roundTurns.round.game.player2.id === userId) {
+    } else if (roundTurns.round.game.player2.id === token?.userId) {
       playerCards = roundTurns.player2CardsArr ?? [];
       playerCardsRemaining = roundTurns.player2CardsRemaining ?? [];
     }
@@ -339,7 +346,7 @@ export class TurnUsecase
       playerCardsRemaining,
       turnsCount: turnFmtArr.length,
       turns: turnFmtArr,
-      TriTurnWinner: roundTurns.TriTurnWinner,
+      triTurnWinner: roundTurns.triTurnWinner,
       roundWinner: roundTurns.roundWinner,
       lastTurnSeq: roundTurns.lastTurnSeq,
       possibleActions: roundTurns.possibleActions,

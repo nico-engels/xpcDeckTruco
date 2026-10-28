@@ -12,7 +12,7 @@ import { AuthenticationUsecase } from '@usecase/authentication-usecase';
 import { PreGameUsecase } from '@usecase/pre-game-usecase';
 import { RoundUsecase } from '@app/usecase/round-usecase';
 import * as utilModule from '@app/util';
-import { ConsoleLogger, Logger } from '@app/util/logger';
+import { Logger } from '@app/util/logger';
 
 const mockAuthentication = jest.spyOn(utilModule, 'authentication');
 const mockGenerateAccessTok = jest.spyOn(utilModule, 'generateAccessTok');
@@ -75,13 +75,11 @@ describe('#authentication', () => {
     };
 
     usecase = new AuthenticationUsecase(mockUserRepo, mockLogger);
-    controller = new AuthenticationController(usecase);
+    controller = new AuthenticationController(usecase, mockLogger);
 
-    const logger = new ConsoleLogger();
-
-    usecaseRound = new RoundUsecase(mockRoundRepo, mockGameRepo, logger);
-    usecasePreGame = new PreGameUsecase(mockPreAuthGameRepo, mockUserRepo, mockGameRepo, usecaseRound, logger);
-    controllerPreGame = new PreGameController(usecasePreGame);
+    usecaseRound = new RoundUsecase(mockRoundRepo, mockGameRepo, mockLogger);
+    usecasePreGame = new PreGameUsecase(mockPreAuthGameRepo, mockUserRepo, mockGameRepo, usecaseRound, mockLogger);
+    controllerPreGame = new PreGameController(usecasePreGame, mockLogger);
   });
 
   describe('login', () => {

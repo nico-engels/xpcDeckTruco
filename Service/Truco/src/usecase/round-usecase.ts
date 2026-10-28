@@ -6,7 +6,6 @@ import {
   FinishRoundInput,
   FinishRoundInputResult,
   InfoRoundsLogic,
-  turnWin,
   AllRoundsInput,
   AllRoundsResult,
   LastRoundInput,
@@ -19,6 +18,12 @@ import { GameErrorCodes } from '@usecase/game-interfaces';
 import { UsecaseError } from '@usecase/usecase-error';
 
 export class RoundError extends UsecaseError<RoundErrorCodes> {};
+
+enum turnWin {
+  draw,
+  player1,
+  player2,
+};
 
 export class RoundUsecase
 {
@@ -71,7 +76,7 @@ export class RoundUsecase
     ];
   }
 
-  private turnWinner(player1Card: string, player2Card: string, trumpCard: string) {
+  private turnWinner(player1Card: string, player2Card: string, trumpCard: string): turnWin {
     /*  Truco Paulista 40 cartas - Codificação
             4  5  6  7  Q  J  K  A  2  3
         ♦   0  1  2  3  4  5  6  7  8  9
@@ -147,9 +152,9 @@ export class RoundUsecase
     let player2LastCard: string = '';
     let player1LastAction: string = '';
     let player2LastAction: string = '';
-    const TriTurnWinner: turnWin[] = [];
+    const triTurnWinner: (number | '-')[] = [];
     let nextPlayerId: number | null = round.starterPlayer?.id ?? null;
-    let roundWinner: turnWin | null = null;
+    let roundWinner: number | null = null;
     let askElevate: string | null = null;
     let lastTurnSeq: number = 0;
 
@@ -165,7 +170,7 @@ export class RoundUsecase
         }
 
         if (t.cardOrAction === 'Gu') {
-          roundWinner = turnWin.player2;
+          roundWinner = round.game.player2.id!;
         } else if (this.getActions().includes(t.cardOrAction ?? '')) {
           player1LastAction = t.cardOrAction ?? '';
         } else {
@@ -178,7 +183,7 @@ export class RoundUsecase
         }
 
         if (t.cardOrAction === 'Gu') {
-          roundWinner = turnWin.player1;
+          roundWinner = round.game.player1.id!;
         } else if (this.getActions().includes(t.cardOrAction ?? '')) {
           player2LastAction = t.cardOrAction ?? '';
         } else {
@@ -188,37 +193,39 @@ export class RoundUsecase
 
       if (player1LastCard.length && player2LastCard.length) {
         const winner = this.turnWinner(player1LastCard, player2LastCard, round.trumpCard ?? '');
-        TriTurnWinner.push(winner);
 
         switch (winner) {
           case turnWin.player1:
-            nextPlayerId = round.game?.player1?.id ?? 0;
+            triTurnWinner.push(round.game.player1.id!);
+            nextPlayerId = round.game.player1.id!;
             break;
 
           case turnWin.player2:
-            nextPlayerId = round.game?.player2?.id ?? 0;
+            triTurnWinner.push(round.game.player2.id!);
+            nextPlayerId = round.game.player2.id!;
             break;
 
           case turnWin.draw:
-            nextPlayerId = round.starterPlayer?.id ?? 0;
+            triTurnWinner.push('-');
+            nextPlayerId = round.starterPlayer.id!;
             break;
         }
 
         player1LastCard = '';
         player2LastCard = '';
       } else if (player1LastCard.length) {
-        nextPlayerId = round.game?.player2?.id ?? 0;
+        nextPlayerId = round.game.player2.id!;
       } else if (player2LastCard.length) {
-        nextPlayerId = round.game?.player1?.id ?? 0;
+        nextPlayerId = round.game.player1.id!;
       }
 
       if (player1LastAction.length && player2LastAction.length) {
         if (player2LastAction === 'No') {
-          roundWinner = turnWin.player1;
+          roundWinner = round.game.player1.id!;
           player1LastAction = '';
           player2LastAction = '';
         } else if (player1LastAction === 'No') {
-          roundWinner = turnWin.player2;
+          roundWinner = round.game.player2.id!;
           player1LastAction = '';
           player2LastAction = '';
         } else {
@@ -235,56 +242,56 @@ export class RoundUsecase
             const pl2act = actionsElevate.indexOf(player2LastAction);
 
             if (pl1act < pl2act) {
-              nextPlayerId = round.game?.player1?.id ?? 0;
+              nextPlayerId = round.game.player1.id!;
               player1LastAction = '';
               askElevate = player2LastAction;
             } else {
-              nextPlayerId = round.game?.player2?.id ?? 0;
+              nextPlayerId = round.game.player2.id!;
               player2LastAction = '';
               askElevate = player1LastAction;
             }
           }
         }
       } else if (player1LastAction.length) {
-        nextPlayerId = round.game?.player2?.id ?? 0;
+        nextPlayerId = round.game.player2.id!;
         askElevate = player1LastAction;
       } else if (player2LastAction.length) {
-        nextPlayerId = round.game?.player1?.id ?? 0;
+        nextPlayerId = round.game.player1.id!;
         askElevate = player2LastAction;
       }
 
-      lastTurnSeq = t.seq ?? 0;
+      lastTurnSeq = t.seq;
     }
 
-    if (!roundWinner && TriTurnWinner.length >= 2) {
-      if (TriTurnWinner.filter((x) => x === turnWin.player1).length == 2) {
-        roundWinner = turnWin.player1;
-      } else if (TriTurnWinner.filter((x) => x === turnWin.player2).length == 2) {
-        roundWinner = turnWin.player2;
+    if (!roundWinner && triTurnWinner.length >= 2) {
+      if (triTurnWinner.filter((x) => x === round.game.player1.id!).length == 2) {
+        roundWinner = round.game.player1.id!;
+      } else if (triTurnWinner.filter((x) => x === round.game.player2.id!).length == 2) {
+        roundWinner = round.game.player2.id!;
       } else if (
-        TriTurnWinner[0] !== turnWin.draw &&
-        (TriTurnWinner[1] === turnWin.draw || (TriTurnWinner.length === 3 && TriTurnWinner[2] === turnWin.draw))
+        triTurnWinner[0] !== '-' &&
+        (triTurnWinner[1] === '-' || (triTurnWinner.length === 3 && triTurnWinner[2] === '-'))
       ) {
-        roundWinner = TriTurnWinner[0];
-      } else if (TriTurnWinner[0] === turnWin.draw && TriTurnWinner[1] !== turnWin.draw) {
-        roundWinner = TriTurnWinner[1];
+        roundWinner = triTurnWinner[0];
+      } else if (triTurnWinner[0] === '-' && triTurnWinner[1] !== '-') {
+        roundWinner = triTurnWinner[1];
       } else if (
-        TriTurnWinner.length === 3 &&
-        TriTurnWinner[0] === turnWin.draw &&
-        TriTurnWinner[1] === turnWin.draw &&
-        TriTurnWinner[2] !== turnWin.draw
+        triTurnWinner.length === 3 &&
+        triTurnWinner[0] === '-' &&
+        triTurnWinner[1] === '-' &&
+        triTurnWinner[2] !== '-'
       ) {
-        roundWinner = TriTurnWinner[2];
+        roundWinner = triTurnWinner[2];
       } else if (
-        TriTurnWinner.length === 3 &&
-        TriTurnWinner[0] === turnWin.draw &&
-        TriTurnWinner[1] === turnWin.draw &&
-        TriTurnWinner[2] === turnWin.draw
+        triTurnWinner.length === 3 &&
+        triTurnWinner[0] === '-' &&
+        triTurnWinner[1] === '-' &&
+        triTurnWinner[2] === '-'
       ) {
-        if (round.starterPlayer?.id === round.game?.player1?.id) {
-          roundWinner = turnWin.player1;
+        if (round.starterPlayer.id === round.game.player1.id) {
+          roundWinner = round.game.player1.id!;
         } else {
-          roundWinner = turnWin.player2;
+          roundWinner = round.game.player2.id!;
         }
       }
     }
@@ -325,7 +332,7 @@ export class RoundUsecase
       player2CardsArr,
       player1CardsRemaining,
       player2CardsRemaining,
-      TriTurnWinner,
+      triTurnWinner,
       roundWinner: roundWinner ?? undefined,
       nextPlayerId: nextPlayerId ?? undefined,
       askElevate: askElevate ?? undefined,
@@ -356,10 +363,10 @@ export class RoundUsecase
     }
 
     let winnerUser: users | undefined;
-    if (roundTurns.roundWinner === turnWin.player1) {
+    if (roundTurns.roundWinner === roundTurns.round.game.player1.id) {
       winnerUser = roundTurns.round.game.player1;
       roundTurns.round.game.player1Score = Math.min(roundTurns.round.game.player1Score + roundTurns.round.score, 12);
-    } else if (roundTurns.roundWinner === turnWin.player2) {
+    } else if (roundTurns.roundWinner === roundTurns.round.game.player2.id) {
       winnerUser = roundTurns.round.game.player2;
       roundTurns.round.game.player2Score = Math.min(roundTurns.round.game.player2Score + roundTurns.round.score, 12);
     }
@@ -456,7 +463,7 @@ export class RoundUsecase
   }
 
   public async lastRound(input: LastRoundInput): Promise<LastRoundResult> {
-    const { token: { userId }, gameId } = input;
+    const { token, gameId } = input;
 
     const lastRound = await this.repo.getLastRoundByGame(gameId);
 
@@ -465,15 +472,19 @@ export class RoundUsecase
     }
 
     let playerCards: string[] = [];
-    if (lastRound.game?.player1?.id == userId) {
-      playerCards = chunkSubstr(lastRound.player1Cards ?? '', 2);
-    } else if (lastRound.game?.player2?.id == userId) {
-      playerCards = chunkSubstr(lastRound.player2Cards ?? '', 2);
+    let readonly = false;
+    if (token?.userId === lastRound.game.player1.id) {
+      playerCards = chunkSubstr(lastRound.player1Cards, 2);
+    } else if (token?.userId === lastRound.game.player2.id) {
+      playerCards = chunkSubstr(lastRound.player2Cards, 2);
+    } else {
+      readonly = true;
     }
 
     return {
       id: lastRound.id!,
       seq: lastRound.seq,
+      readonly,
       playerCards: playerCards,
       trumpCard: lastRound.trumpCard,
       starterPlayer: lastRound.starterPlayer.id!,

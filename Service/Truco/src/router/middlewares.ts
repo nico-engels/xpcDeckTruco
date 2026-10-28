@@ -33,17 +33,16 @@ export async function validadeTok(req: Request, res: Response, next: NextFunctio
   try {
     const token = req.header('Authorization')?.replace(/^Bearer /, '');
     if (!token || token === 'undefined') {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Access denied' }).end();
-      return;
+      req.log.info(`no token`);
+    } else {
+      const decoded = jwt.verify(token, AppConfig.security.tokSecret) as jwtAppPayload;
+      req.appTokenPayload = {
+        username: decoded.username,
+        userId: decoded.userId,
+        gameId: decoded.gameId,
+      };
+      req.log.info(`validate token ok for '${decoded.username}'`);
     }
-
-    const decoded = jwt.verify(token, AppConfig.security.tokSecret) as jwtAppPayload;
-    req.appTokenPayload = {
-      username: decoded.username,
-      userId: decoded.userId,
-      gameId: decoded.gameId,
-    };
-    req.log.info(`validate token ok for '${decoded.username}'`);
   } catch (error) {
     req.log.error(error);
     res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid token' }).end();

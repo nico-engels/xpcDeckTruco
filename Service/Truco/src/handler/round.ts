@@ -13,7 +13,7 @@ export class RoundHandler
     const repo = new TypeOrmRoundRepository(logger);
     const gameRepo = new TypeOrmGameRepository(logger);
     const usecase = new RoundUsecase(repo, gameRepo, logger);
-    const controller = new RoundController(usecase);
+    const controller = new RoundController(usecase, logger);
 
     await repo.initializeDbEngine();
     await gameRepo.initializeDbEngine();

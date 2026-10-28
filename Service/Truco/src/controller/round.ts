@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { create, StructError } from 'superstruct';
 
 import { reqToInputSchema } from '@app/util';
+import { Logger } from '@app/util/logger';
 import { RoundError, RoundUsecase } from '@app/usecase/round-usecase';
 import {
   AllRoundsInputSchema,
@@ -15,6 +16,7 @@ export class RoundController
 {
   constructor(
     private usecase: RoundUsecase,
+    private logger: Logger,
   ) {}
 
   public async finishRound(req: Request, res: Response) {
@@ -76,7 +78,9 @@ export class RoundController
       res.status(status).json({ message: error.message }).end();
       return;
     } else if (error instanceof StructError) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message }).end();
+      this.logger.error(`error in validation '${error.message}'`);
+
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'input validation error' }).end();
       return;
     }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();

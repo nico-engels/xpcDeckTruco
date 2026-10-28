@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { create, StructError } from 'superstruct';
 
 import { reqToInputSchema } from '@app/util';
+import { Logger } from '@app/util/logger';
 import { InfoGameInputSchema, GameErrorCodes, NewGameInputSchema, ListActiveGamesInputSchema } from '@usecase/game-interfaces';
 import { GameError, GameUsecase } from '@usecase/game-usecase';
 
@@ -10,6 +11,7 @@ export class GameController
 {
   constructor(
     private usecase: GameUsecase,
+    private logger: Logger,
   ) {}
 
   public async infoGame(req: Request, res: Response): Promise<void> {
@@ -54,7 +56,6 @@ export class GameController
 
   private mapDomainErrorToStatusCode(code: string): StatusCodes {
     const mapError: Record<string, StatusCodes> = {
-      [GameErrorCodes.FORBIDDEN]: StatusCodes.FORBIDDEN,
       [GameErrorCodes.NEW_GAME_WITH_ITSELF]: StatusCodes.CONFLICT,
       [GameErrorCodes.NOT_FOUND]: StatusCodes.NOT_FOUND,
     };
@@ -69,7 +70,9 @@ export class GameController
       res.status(status).json({ message: error.message }).end();
       return;
     } else if (error instanceof StructError) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message }).end();
+      this.logger.error(`error in validation '${error.message}'`);
+
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'input validation error' }).end();
       return;
     }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();

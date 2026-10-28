@@ -11,7 +11,7 @@ export class AuthenticationHandler
     const logger = new PinoLogger(req.log);
     const repo = new TypeOrmUserRepository(logger);
     const usecase = new AuthenticationUsecase(repo, logger);
-    const controller = new AuthenticationController(usecase);
+    const controller = new AuthenticationController(usecase, logger);
 
     await repo.initializeDbEngine();
 

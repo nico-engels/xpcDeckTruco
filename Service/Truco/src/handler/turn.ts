@@ -13,7 +13,7 @@ export class TurnHandler
     const repo = new TypeOrmTurnRepository(logger);
     const roundRepo = new TypeOrmRoundRepository(logger);
     const usecase = new TurnUsecase(repo, roundRepo, logger);
-    const controller = new TurnController(usecase);
+    const controller = new TurnController(usecase, logger);
 
     await repo.initializeDbEngine();
     await roundRepo.initializeDbEngine();

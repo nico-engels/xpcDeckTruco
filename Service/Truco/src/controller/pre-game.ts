@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { create, StructError } from 'superstruct';
 
 import { reqToInputSchema } from '@app/util';
+import { Logger } from '@app/util/logger';
 import {
   GeneratePreGameTokenInputSchema,
   ListPreAuthGamesInputSchema,
@@ -16,6 +17,7 @@ export class PreGameController
 {
   constructor(
     private usecase: PreGameUsecase,
+    private logger: Logger,
   ) {}
 
   public async newPreAuthGame(req: Request, res: Response): Promise<void> {
@@ -92,7 +94,9 @@ export class PreGameController
       res.status(status).json({ message: error.message }).end();
       return;
     } else if (error instanceof StructError) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message }).end();
+      this.logger.error(`error in validation '${error.message}'`);
+
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'input validation error' }).end();
       return;
     }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();

@@ -25,12 +25,7 @@ export class GameUsecase
   ) {}
 
   public async infoGame(input: InfoGameInput): Promise<InfoGameResult> {
-    const { token: { gameId: tokenGameId, userId }, gameId } = input;
-
-    if (tokenGameId && gameId !== tokenGameId) {
-      this.logger.error(`GameId in token ${tokenGameId} not match the ${gameId} in request`);
-      throw new GameError(GameErrorCodes.FORBIDDEN, 'Link auth only access predefined games!');
-    }
+    const { token, gameId } = input;
 
     const game = await this.repo.getGameById(gameId);
 
@@ -47,13 +42,13 @@ export class GameUsecase
     let player2Score = game.player2Score;
     let readonly = false;
 
-    if (userId === game.player2.id) {
+    if (token?.userId === game.player2.id) {
 
       [player1Id, player2Id] = [player2Id, player1Id];
       [player1, player2] = [player2, player1];
       [player1Score, player2Score] = [player2Score, player1Score];
 
-    } else if (userId != game.player1.id && userId != game.player2.id) {
+    } else if (token?.userId !== game.player1.id && token?.userId !== game.player2.id) {
       readonly = true;
     }
 

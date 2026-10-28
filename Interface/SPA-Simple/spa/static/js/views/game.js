@@ -150,6 +150,19 @@ export default class extends AbstractView {
   }
 
   async consumeApi(url, requestCfg) {
+
+    if (!requestCfg) {
+      requestCfg = { method: 'GET' };
+    }
+
+    if (this.jwtToken) {
+      requestCfg.headers['Authorization'] = `Bearer ${this.jwtToken}`;
+    }
+
+    if (['POST'].includes(requestCfg.method)) {
+      requestCfg.headers['Content-Type'] = 'application/json';
+    }
+
     const req = await fetch(url, requestCfg);
     const resp = await req.text();
 
@@ -238,10 +251,6 @@ export default class extends AbstractView {
         elem.onclick = async () => {
           await this.consumeApi('/api-truco/round/end', {
             method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${this.jwtToken}`,
-              'Content-Type': 'application/json',
-            },
             body: JSON.stringify({
               roundId: this.roundId,
             }),
@@ -303,12 +312,7 @@ export default class extends AbstractView {
   }
 
   async loadGameInfo(gameId) {
-    const gameInfo = await this.consumeApi(`/api-truco/game/info/${gameId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.jwtToken}`,
-      },
-    });
+    const gameInfo = await this.consumeApi(`/api-truco/game/info/${gameId}`);
 
     if (!gameInfo)
       return;
@@ -338,7 +342,7 @@ export default class extends AbstractView {
     document.getElementById('player_1_name_p').innerText = `${gameInfo.player1}${p1nameSuf}`;
     document.getElementById('score_text_p1').innerText = gameInfo.player1Score;
 
-    document.getElementById('player_2_round_p').innerText = `#${gameInfo.id} > ${gameInfo.lastRoundSeq}`;
+    document.getElementById('player_2_round_p').innerText = `#${gameInfo.id} > ${gameInfo.lastRoundId}`;
 
     const optFmtDate = {
       year: 'numeric',
@@ -372,12 +376,7 @@ export default class extends AbstractView {
   }
 
   async loadLastRound(gameId) {
-    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.jwtToken}`,
-      },
-    });
+    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`);
 
     if (!lastRound) return;
 
@@ -430,14 +429,7 @@ export default class extends AbstractView {
 
     document.getElementById('score_text_s').innerText = `+${lastRound.score}`;
 
-    msg += `> Inicia a mão ${lastRound.seq} `;
-
-    if (lastRound.starterPlayer == this.player1Id) {
-      msg += this.player1;
-    } else {
-      msg += this.player2;
-    }
-    msg += '.\n';
+    msg += `> Inicia a mão ${(lastRound.starterPlayer == this.player1Id) ? this.player1 : this.player2 }.\n`;
 
     document.getElementById('msg_text').value = `${msg}${document.getElementById('msg_text').value}`;
 
@@ -450,12 +442,7 @@ export default class extends AbstractView {
   }
 
   async loadLastRoundId(gameId) {
-    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.jwtToken}`,
-      },
-    });
+    const lastRound = await this.consumeApi(`/api-truco/round/last/${gameId}`);
 
     if (!lastRound) return;
 
@@ -463,14 +450,10 @@ export default class extends AbstractView {
   }
 
   async check(roundId) {
-    const checkData = await this.consumeApi(`/api-truco/turn/check/${roundId}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${this.jwtToken}`,
-      },
-    });
+    const checkData = await this.consumeApi(`/api-truco/turn/check/${roundId}`);
 
-    if (!checkData || (checkData.lastTurnSeq == this.turnSeq && !this.firstRun && !this.firstRoundRun)) return;
+    if (!checkData || (checkData.lastTurnSeq == this.turnSeq && !this.firstRun && !this.firstRoundRun))
+      return;
 
     const actionsDesc = { Tr: 'TRUCO', Sx: 'SEIS', Nn: 'NOVE', Tw: 'DOZE' };
     const aswerDesc = { Ys: 'sim', No: 'não' };
@@ -489,7 +472,7 @@ export default class extends AbstractView {
     for (let i = this.turnSeq; i < checkData.lastTurnSeq; i++) {
       const t = checkData.turns[i];
 
-      let log = `> ${t.seq} ${t.player} `;
+      let log = `> ${t.player} `;
 
       if (actionsDesc[t.cardOrAction]) {
         log += `pediu ${actionsDesc[t.cardOrAction]}`;
@@ -509,26 +492,26 @@ export default class extends AbstractView {
         }
 
         this.playCardPage(t.cardOrAction, playerOrd, this.round);
+
+        if (!(this.cardsPlayed % 2) && checkData.triTurnWinner[this.round - 1] !== undefined) {
+          let winnerPlayer = '';
+          if (checkData.triTurnWinner[this.round - 1] == this.player1Id) {
+            log += ` e ganhou a rodada ${this.round}`;
+            document.getElementById(`turn_${this.round}_card_${player1Ord}_img`).classList.add('turn-winner');
+          } else if (checkData.triTurnWinner[this.round - 1] == this.player2Id) {
+            log += ` e perdeu a rodada ${this.round}`;
+            document.getElementById(`turn_${this.round}_card_${player2Ord}_img`).classList.add('turn-winner');
+          } else {
+            log += ` e a rodada ${this.round} deu empate`;
+            document.getElementById(`turn_${this.round}_card_1_img`).classList.add('turn-winner');
+            document.getElementById(`turn_${this.round}_card_2_img`).classList.add('turn-winner');
+          }
+
+          this.round++;
+        }
       }
 
       msg = log + '.\n' + msg;
-
-      if (this.cardsPlayed && !(this.cardsPlayed % 2) && checkData.TriTurnWinner[this.round - 1] !== undefined) {
-        let winnerPlayer = '';
-        if (checkData.TriTurnWinner[this.round - 1] == 1) {
-          msg = `> ${checkData.player1} ganhou a rodada ${this.round}.\n${msg}`;
-          document.getElementById(`turn_${this.round}_card_${player1Ord}_img`).classList.add('turn-winner');
-        } else if (checkData.TriTurnWinner[this.round - 1] == 2) {
-          msg = `> ${checkData.player2} ganhou a rodada ${this.round}.\n${msg}`;
-          document.getElementById(`turn_${this.round}_card_${player2Ord}_img`).classList.add('turn-winner');
-        } else {
-          msg = `> Rodada ${this.round} deu empate.\n${msg}`;
-          document.getElementById(`turn_${this.round}_card_1_img`).classList.add('turn-winner');
-          document.getElementById(`turn_${this.round}_card_2_img`).classList.add('turn-winner');
-        }
-
-        this.round++;
-      }
 
       this.turnSeq = t.seq;
     }
@@ -538,7 +521,7 @@ export default class extends AbstractView {
     this.enableActions([]);
     if (checkData.roundWinner) {
       let winnerPlayer = '';
-      if (checkData.roundWinner == 1) {
+      if (checkData.roundWinner == this.player1Id) {
         winnerPlayer = checkData.player1;
       } else {
         winnerPlayer = checkData.player2;
@@ -548,7 +531,7 @@ export default class extends AbstractView {
       this.enableActions(['finishRound']);
       clearInterval(this.interval);
 
-      msg = `> ${winnerPlayer} ganhou a mão ${checkData.roundSeq} valendo ${checkData.score} pontos.\n${msg}`;
+      msg = `> ${winnerPlayer} ganhou a mão valendo ${checkData.score} pontos.\n${msg}`;
     } else if (checkData.turns.length > 0) {
       if (checkData.nextPlayerId == this.player1Id) {
         msg = `> É sua vez.\n${msg}`;
@@ -565,10 +548,6 @@ export default class extends AbstractView {
   async playCard(which) {
     const playData = await this.consumeApi('/api-truco/turn/play', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.jwtToken}`,
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
         roundId: this.roundId,
         prevSeq: this.turnSeq,
@@ -587,10 +566,6 @@ export default class extends AbstractView {
   async playAction(which) {
     const playData = await this.consumeApi('/api-truco/turn/play', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.jwtToken}`,
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify({
         roundId: this.roundId,
         prevSeq: this.turnSeq,
@@ -610,8 +585,6 @@ export default class extends AbstractView {
       return;
 
     this.jwtToken = sessionStorage.getItem('jwtToken');
-    if (!this.jwtToken)
-      return;
 
     const lastMsg = await this.loadGameInfo(this.params.gameId);
     const lastRoundId = await this.loadLastRound(this.params.gameId);

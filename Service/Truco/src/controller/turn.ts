@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import { reqToInputSchema } from '@app/util';
+import { Logger } from '@app/util/logger';
 import { TurnError, TurnUsecase } from '@app/usecase/turn-usecase';
 import { create, StructError } from 'superstruct';
 import { CheckTurnInputSchema, PlayTurnInputSchema, TurnErrorCodes } from '@app/usecase/turn-interfaces';
@@ -11,6 +12,7 @@ export class TurnController
 {
   constructor(
     private usecase: TurnUsecase,
+    private logger: Logger,
   ) {}
 
   public async checkTurn(req: Request, res: Response): Promise<void> {
@@ -57,7 +59,9 @@ export class TurnController
       res.status(status).json({ message: error.message }).end();
       return;
     } else if (error instanceof StructError) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message }).end();
+      this.logger.error(`error in validation '${error.message}'`);
+
+      res.status(StatusCodes.BAD_REQUEST).json({ message: 'input validation error' }).end();
       return;
     }
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();

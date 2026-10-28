@@ -1,9 +1,8 @@
-import { coerce, Infer, number, object, string } from 'superstruct';
+import { coerce, Infer, number, object, optional, string } from 'superstruct';
 
 import { AppTokenSchema } from "@usecase/common-interfaces";
 
 export enum GameErrorCodes {
-  FORBIDDEN = 'FORBIDDEN',
   NEW_GAME_WITH_ITSELF = 'NEW_GAME_WITH_ITSELF',
   NOT_FOUND = 'NOT_FOUND',
 };
@@ -13,7 +12,7 @@ const stringToNumber = coerce(number(), string(), (value) => {
 });
 
 export const InfoGameInputSchema = object({
-  token: AppTokenSchema,
+  token: optional(AppTokenSchema),
   gameId: stringToNumber,
 });
 

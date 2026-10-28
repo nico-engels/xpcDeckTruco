@@ -32,11 +32,18 @@ export function chunkSubstr(str: string, size: number) {
 
 // eslint-disable-next-line
 export function reqToInputSchema(req: Request): any {
-  return {
-    token: {
-      ...req.appTokenPayload,
-    },
-    ...req.body,
-    ...req.params,
-  };
+  if (!req.appTokenPayload) {
+    return {
+      ...req.body,
+      ...req.params,
+    };
+  } else {
+    return {
+      token: {
+        ...req.appTokenPayload,
+      },
+      ...req.body,
+      ...req.params,
+    };
+  }
 }
