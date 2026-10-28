@@ -69,7 +69,8 @@ export class TurnUsecase
     const player2CardNumber = ranks.indexOf(player2Card[0]) + suits.indexOf(player2Card[1]) * 10;
     const trumpCardNumber = ranks.indexOf(trumpCard[0]) + suits.indexOf(trumpCard[1]) * 10;
 
-    if ((trumpCardNumber + 1) % 10 === player1CardNumber % 10 && (trumpCardNumber + 1) % 10 === player2CardNumber % 10) {
+    if (   (trumpCardNumber + 1) % 10 === player1CardNumber % 10
+        && (trumpCardNumber + 1) % 10 === player2CardNumber % 10) {
       if (Math.floor(player1CardNumber / 10) > Math.floor(player2CardNumber / 10)) {
         return turnWin.player1;
       } else {
@@ -184,11 +185,15 @@ export class TurnUsecase
           player2LastAction = '';
         } else {
           if (actionsElevate.includes(player1LastAction) && player2LastAction === 'Ys') {
-            nextPlayerId = player1CardsRemaining.length >= player2CardsRemaining.length ? round.game.player1.id! : round.game.player2.id!;
+            nextPlayerId = player1CardsRemaining.length >= player2CardsRemaining.length
+              ? round.game.player1.id!
+              : round.game.player2.id!;
             player1LastAction = '';
             player2LastAction = '';
           } else if (actionsElevate.includes(player2LastAction) && player1LastAction === 'Ys') {
-            nextPlayerId = player1CardsRemaining.length <= player2CardsRemaining.length ? round.game.player2.id : round.game.player1.id!;
+            nextPlayerId = player1CardsRemaining.length <= player2CardsRemaining.length
+              ? round.game.player2.id
+              : round.game.player1.id!;
             player1LastAction = '';
             player2LastAction = '';
           } else {

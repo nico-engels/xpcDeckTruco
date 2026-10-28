@@ -72,6 +72,7 @@ describe('#game', () => {
         player2Id: 2,
         player2: 'roger',
         player2Score: 6,
+        readonly: true,
         startPlay: new Date(),
         lastPlay: new Date(),
         rounds: [
@@ -135,6 +136,7 @@ describe('#game', () => {
       player2Id: expectInfo.gameInfo.player2Id,
       player2: expectInfo.gameInfo.player2,
       player2Score: expectInfo.gameInfo.player2Score,
+      readonly: expectInfo.gameInfo.readonly,
       startPlay: expectInfo.gameInfo.startPlay,
       lastPlay: expectInfo.gameInfo.lastPlay,
       lastRoundId: expectInfo.gameInfo.rounds.at(-1)?.id,

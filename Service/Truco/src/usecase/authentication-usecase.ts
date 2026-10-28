@@ -24,14 +24,6 @@ export class AuthenticationUsecase
   public async login(input: LoginInput): Promise<LoginResult> {
     const { username, email, rpAddress, password } = input;
 
-    if (!username && !email && !rpAddress) {
-      throw new AuthenticationError(AuthenticationErrorCodes.INVALID_INPUT, 'Login only username, e-mail or xrp-address!');
-    }
-
-    if ((username && email) || (username && rpAddress) || (email && rpAddress)) {
-      throw new AuthenticationError(AuthenticationErrorCodes.INVALID_INPUT, 'Login only username, e-mail or xrp-address!');
-    }
-
     if (rpAddress) {
       throw new AuthenticationError(AuthenticationErrorCodes.NOT_IMPLEMENTED);
     }

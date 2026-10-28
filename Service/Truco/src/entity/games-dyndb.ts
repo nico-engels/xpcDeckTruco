@@ -320,7 +320,9 @@ export async function getLastRoundByGameDyndb(gameId: number) {
       trumpCard: docRound.trumpCard,
       starterPlayer: {
         id: docRound.starterPlayer,
-        username: res.Item.player1Username === docRound.starterPlayer ? res.Item.player1Username : res.Item.player2Username,
+        username: res.Item.player1Username === docRound.starterPlayer
+          ? res.Item.player1Username
+          : res.Item.player2Username,
       },
       score: docRound.score,
       seq: docRound.seq,

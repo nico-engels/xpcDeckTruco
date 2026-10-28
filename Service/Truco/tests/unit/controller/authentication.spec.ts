@@ -1058,8 +1058,9 @@ describe('#authentication', () => {
     test('Should generate the jwt token by the link ply1', async () => {
       const expectInfo = {
         player1Link: 'jksdj34312sd',
-        deviceId: 'device-123',
+        device1Id: 'device-123',
         player2Link: 'petecaGy777',
+        device2Id: 'device-321',
         player1: {
           id: 33,
           username: 'playerk1',
@@ -1080,7 +1081,7 @@ describe('#authentication', () => {
         },
         body: {
           playerLink: expectInfo.player1Link,
-          deviceId: expectInfo.deviceId,
+          deviceId: expectInfo.device1Id,
         },
       } as Request;
       const res = {
@@ -1092,6 +1093,8 @@ describe('#authentication', () => {
       mockPreAuthGameRepo.getPreGameByLink.mockResolvedValue({
         player1Link: expectInfo.player1Link,
         player2Link: expectInfo.player2Link,
+        player1DeviceId: expectInfo.device1Id,
+        player2DeviceId: expectInfo.device2Id,
         game: {
           id: expectInfo.gameId,
           player1: {
@@ -1118,7 +1121,9 @@ describe('#authentication', () => {
       expect(mockPreAuthGameRepo.getPreGameByLink).toHaveBeenCalledTimes(1);
       expect(mockPreAuthGameRepo.getPreGameByLink).toHaveBeenCalledWith(expectInfo.player1Link);
       expect(mockGenerateAccessTok).toHaveBeenCalledTimes(1);
-      expect(mockGenerateAccessTok).toHaveBeenCalledWith(expectInfo.player1.username, expectInfo.player1.id, expectInfo.gameId);
+      expect(mockGenerateAccessTok).toHaveBeenCalledWith(
+        expectInfo.player1.username, expectInfo.player1.id, expectInfo.gameId
+      );
       expect(mockPreAuthGameRepo.updatePreAuthGame).toHaveBeenCalledTimes(1);
       expect(mockPreAuthGameRepo.updatePreAuthGame).toHaveBeenCalledWith({
         game: {
@@ -1130,8 +1135,10 @@ describe('#authentication', () => {
         } as games,
         player1Link: expectInfo.player1Link,
         player2Link: expectInfo.player2Link,
-        player1DeviceId: expectInfo.deviceId,
+        player1DeviceId: expectInfo.device1Id,
+        player2DeviceId: expectInfo.device2Id,
       });
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
       expect(res.status).toHaveBeenCalledWith(StatusCodes.OK);
       expect(res.json).toHaveBeenCalledWith({
         message: 'ok',
@@ -1145,8 +1152,8 @@ describe('#authentication', () => {
     test('Should generate the jwt token by the link ply2', async () => {
       const expectInfo = {
         player1Link: 'jksdj34312sd',
-        deviceId: 'device-123',
         player2Link: 'petecaGy777',
+        device2Id: 'device-321',
         player: {
           id: 33,
           username: 'playerk1',
@@ -1163,7 +1170,7 @@ describe('#authentication', () => {
         },
         body: {
           playerLink: expectInfo.player2Link,
-          deviceId: expectInfo.deviceId,
+          deviceId: expectInfo.device2Id,
         },
       } as Request;
       const res = {
@@ -1175,6 +1182,7 @@ describe('#authentication', () => {
       mockPreAuthGameRepo.getPreGameByLink.mockResolvedValue({
         player1Link: expectInfo.player1Link,
         player2Link: expectInfo.player2Link,
+        player2DeviceId: expectInfo.device2Id,
         game: {
           id: expectInfo.gameId,
           player2: {
@@ -1187,6 +1195,7 @@ describe('#authentication', () => {
       mockPreAuthGameRepo.updatePreAuthGame.mockResolvedValue({
         player1Link: expectInfo.player1Link,
         player2Link: expectInfo.player2Link,
+        player2DeviceId: expectInfo.device2Id,
         game: {
           id: expectInfo.gameId,
           player2: {
@@ -1201,7 +1210,9 @@ describe('#authentication', () => {
       expect(mockPreAuthGameRepo.getPreGameByLink).toHaveBeenCalledTimes(1);
       expect(mockPreAuthGameRepo.getPreGameByLink).toHaveBeenCalledWith(expectInfo.player2Link);
       expect(mockGenerateAccessTok).toHaveBeenCalledTimes(1);
-      expect(mockGenerateAccessTok).toHaveBeenCalledWith(expectInfo.player.username, expectInfo.player.id, expectInfo.gameId);
+      expect(mockGenerateAccessTok).toHaveBeenCalledWith(
+        expectInfo.player.username, expectInfo.player.id, expectInfo.gameId
+      );
       expect(mockPreAuthGameRepo.updatePreAuthGame).toHaveBeenCalledTimes(1);
       expect(mockPreAuthGameRepo.updatePreAuthGame).toHaveBeenCalledWith({
         game: {
@@ -1213,7 +1224,7 @@ describe('#authentication', () => {
         } as games,
         player1Link: expectInfo.player1Link,
         player2Link: expectInfo.player2Link,
-        player2DeviceId: expectInfo.deviceId,
+        player2DeviceId: expectInfo.device2Id,
       });
       expect(res.status).toHaveBeenCalledWith(StatusCodes.OK);
       expect(res.json).toHaveBeenCalledWith({

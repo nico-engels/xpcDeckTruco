@@ -8,7 +8,7 @@ import { AuthenticationError, AuthenticationUsecase } from '@usecase/authenticat
 import {
   AuthenticationErrorCodes,
   ChangePasswordInputSchema,
-  LoginInputSchema,
+  LoginInputSchemaRefine,
   RegisterInputSchema,
 } from '@usecase/authentication-interfaces';
 
@@ -21,7 +21,7 @@ export class AuthenticationController
 
   public async login(req: Request, res: Response): Promise<void> {
     try {
-      const data = create({ ...req.body }, LoginInputSchema);
+      const data = create({ ...req.body }, LoginInputSchemaRefine);
       const result = await this.usecase.login(data);
 
       res.status(StatusCodes.OK)

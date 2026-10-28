@@ -19,7 +19,8 @@
     "lib": ["ESNext"],
     "resolveJsonModule": true,
     "strictNullChecks": true,
-    "target": "esnext"
+    "target": "esnext",
+    "types": ["jest"]
   },
   "include": ["./src/**/*", "./tests/**/*"],
   "tsc-alias": {

@@ -70,18 +70,14 @@ export class PreGameUsecase
 
     return {
       message: 'ok',
-      gameId: newPreGame.game?.id ?? 0,
-      player1Link: newPreGame.player1Link ?? '',
-      player2Link: newPreGame.player2Link ?? '',
+      gameId: newPreGame.game.id!,
+      player1Link: newPreGame.player1Link,
+      player2Link: newPreGame.player2Link,
     };
   }
 
   public async generatePreGameToken(input: GeneratePreGameTokenInput): Promise<GeneratePreGameTokenResult> {
     const { playerLink, deviceId } = input;
-
-    if (!playerLink || !deviceId) {
-      throw new PreGameError(PreGameErrorCodes.INVALID_INPUT);
-    }
 
     const preGame = await this.repo.getPreGameByLink(playerLink);
     if (!preGame) {
@@ -89,10 +85,12 @@ export class PreGameUsecase
     }
 
     const player = playerLink === preGame.player1Link ? preGame.game.player1 : preGame.game.player2;
-    const deviceIdRegistred = (playerLink === preGame.player1Link ? preGame.player1DeviceId : preGame.player2DeviceId) ?? '-';
+    const deviceIdRegistred =
+      (playerLink === preGame.player1Link ? preGame.player1DeviceId : preGame.player2DeviceId) ?? '-';
 
     if (AppConfig.security.preAuthGameValidateDevice && deviceIdRegistred !== deviceId) {
-      this.logger.error(`Invalid device trying to consume link. Device registred ${deviceIdRegistred} device request ${deviceId} ${process.env.PREAUTH_VALIDATE_DEVICE}`);
+      this.logger.error(`Invalid device trying to consume link. ` +
+        `Device registred ${deviceIdRegistred} device request ${deviceId} ${process.env.PREAUTH_VALIDATE_DEVICE}`);
       throw new PreGameError(PreGameErrorCodes.UNAUTHORIZED);
     }
 
@@ -102,14 +100,14 @@ export class PreGameUsecase
       preGame.player2DeviceId = deviceId;
     }
 
-    const jwtToken = generateAccessTok(player?.username ?? '', player?.id ?? 0, preGame.game.id);
+    const jwtToken = generateAccessTok(player.username, player.id!, preGame.game.id!);
 
     await this.repo.updatePreAuthGame(preGame);
 
     return {
       message: 'ok',
-      playerId: player?.id ?? 0,
-      player: player?.username ?? '',
+      playerId: player.id!,
+      player: player.username,
       jwtToken,
       gameId: preGame.game.id!,
     };
@@ -162,9 +160,9 @@ export class PreGameUsecase
       preAuthGamesCount: preAuthGames.length,
       preAuthGames: preAuthGames.map((pag) => ({
         id: pag.id!,
-        player1: pag.game.player1?.username ?? '',
+        player1: pag.game.player1.username,
         player1Link: pag.player1Link,
-        player2: pag.game.player2?.username ?? '',
+        player2: pag.game.player2.username,
         player2Link: pag.player2Link,
         gameId: pag.game.id!,
       })),

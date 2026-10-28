@@ -1,4 +1,4 @@
-import { Infer, object, optional, string } from 'superstruct';
+import { Infer, object, optional, refine, string } from 'superstruct';
 
 import { AppTokenSchema } from "@usecase/common-interfaces";
 
@@ -10,14 +10,22 @@ export enum AuthenticationErrorCodes {
   UNAUTHORIZED = 'UNAUTHORIZED',
 };
 
-export const LoginInputSchema = object({
+const LoginInputSchema = object({
   username: optional(string()),
   email: optional(string()),
   rpAddress: optional(string()),
   password: string(),
 });
 
-export type LoginInput = Infer<typeof LoginInputSchema>;
+export const LoginInputSchemaRefine = refine(LoginInputSchema, 'LoginInputSchemaRefine', (value) => {
+  const hasUsername = !!value.username;
+  const hasEmail = !!value.email;
+  const hasRpAddress = !!value.rpAddress;
+
+  return [hasUsername, hasEmail, hasRpAddress].filter(flag => flag).length === 1 || 'Only one method should be defined';
+});
+
+export type LoginInput = Infer<typeof LoginInputSchemaRefine>;
 
 export interface LoginResult {
   userId: number;

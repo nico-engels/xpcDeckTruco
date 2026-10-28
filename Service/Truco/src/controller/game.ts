@@ -4,7 +4,12 @@ import { create, StructError } from 'superstruct';
 
 import { reqToInputSchema } from '@app/util';
 import { Logger } from '@app/util/logger';
-import { InfoGameInputSchema, GameErrorCodes, NewGameInputSchema, ListActiveGamesInputSchema } from '@usecase/game-interfaces';
+import {
+  InfoGameInputSchema,
+  GameErrorCodes,
+  ListActiveGamesInputSchema,
+  NewGameInputSchema,
+} from '@usecase/game-interfaces';
 import { GameError, GameUsecase } from '@usecase/game-usecase';
 
 export class GameController
